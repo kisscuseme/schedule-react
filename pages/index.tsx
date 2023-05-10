@@ -1,5 +1,23 @@
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react"
+import SignIn from "./signin";
+import Schedule from "./schedule";
+
 export default function Home() {
+  const [user, setUser] = useState(null as UserProps);
+  const router = useRouter();
+  useEffect(() => {
+    // if(!user){
+    //   setUser({
+    //     name: "test",
+    //     email: "test@mail.com"
+    //   });
+    // }
+  }, [user]);
+
   return (
-    <div>hello world</div>
+    <>
+      {user?<Schedule/>:<SignIn/>}
+    </>
   )
 }
