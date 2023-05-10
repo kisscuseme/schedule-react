@@ -1,5 +1,9 @@
 export interface InputProps {
   /**
+   * 타입
+   */
+  type?: string;
+  /**
    * 글자 색상
    */
   color?: string;
@@ -10,7 +14,7 @@ export interface InputProps {
   /**
    * Placeholder 텍스트
    */
-  placeholder: string;
+  placeholder?: string;
   /**
    * Placeholder 글자 색상
    */
@@ -19,4 +23,12 @@ export interface InputProps {
    * 라인 색상
    */
   borderColor?: string;
+  /**
+   * onChange Handler
+   */
+  onChange?: () => {};
+  /**
+   * onClick Handler
+   */
+  clearButton?: boolean;
 }

@@ -5,6 +5,8 @@ export const defaultStyle = css`
   font-weight: 700;
   border: 0;
   outline-width: 0;
+  background-color: transparent;
+  width: 100%;
 `;
 
 export const sizeStyles = {
