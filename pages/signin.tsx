@@ -4,7 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 
 export default function SignIn() {
   return (
-    <Container>
+    <Container fluid css={css`background-color: #eeeeee; max-width: 768px;`}>
       <Row css={css`height: 100px;`}>
         <Col css={css`margin: auto;`}>
           <Text as="h2" center>일정 관리</Text>
