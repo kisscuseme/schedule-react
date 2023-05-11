@@ -9,10 +9,10 @@ import { css } from '@emotion/react';
 export const Button = ({
   primary = false,
   size = "medium",
-  backgroundColor = "#ffffff",
-  color = "#6e6e6e",
+  backgroundColor = "transparent",
+  color = "#aeaeae",
   children,
-  align = "left",
+  align = "none",
   ...props
 }: ButtonProps) => {
 
@@ -25,41 +25,40 @@ export const Button = ({
     color: ${color};
     background-color: ${backgroundColor};
     &:hover {
-      color: ${backgroundColor};
+      color: ${backgroundColor === 'transparent'?'#ffffff':backgroundColor};
       background-color: ${color};
     }
     ${sizeStyles[size]}
   `;
 
+  const btnPrimaryStyle = `
+    --bs-btn-color: ${color};
+    --bs-btn-bg: ${backgroundColor};
+    --bs-btn-border-color: ${backgroundColor};
+    --bs-btn-hover-color: ${color};
+    --bs-btn-hover-bg: ${backgroundColor};
+    --bs-btn-hover-border-color: ${backgroundColor};
+    --bs-btn-focus-shadow-rgb: 49,132,253;
+    --bs-btn-active-color: ${color};
+    --bs-btn-active-bg: ${backgroundColor};
+    --bs-btn-active-border-color: ${backgroundColor};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: ${color};
+    --bs-btn-disabled-bg: ${backgroundColor};
+    --bs-btn-disabled-border-color: ${backgroundColor};
+  `;
+
+  const parentStyle = `
+    display: inline-block;
+    margin: 5px;
+    ${align === "center" ? "width:100%;text-align:center;" : ("float: " + align)}
+  `;
+
   return (
     <>
-      <style>
-        {`
-          .btn-parent {
-            text-align: ${align};
-          }
-
-          .btn-primary {
-            --bs-btn-color: ${color};
-            --bs-btn-bg: ${backgroundColor};
-            --bs-btn-border-color: ${backgroundColor};
-            --bs-btn-hover-color: ${color};
-            --bs-btn-hover-bg: ${backgroundColor};
-            --bs-btn-hover-border-color: ${backgroundColor};
-            --bs-btn-focus-shadow-rgb: 49,132,253;
-            --bs-btn-active-color: ${color};
-            --bs-btn-active-bg: ${backgroundColor};
-            --bs-btn-active-border-color: ${backgroundColor};
-            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color: ${color};
-            --bs-btn-disabled-bg: ${backgroundColor};
-            --bs-btn-disabled-border-color: ${backgroundColor};
-          }
-        `}
-      </style>
-      <div className='btn-parent'>
+      <div css={css(parentStyle)}>
         <BootstrapButton
-          css={css([defaultStyle, customStyle])}
+          css={css([defaultStyle, customStyle, btnPrimaryStyle])}
           {...props}
         >
           {children}

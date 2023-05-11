@@ -1,54 +1,46 @@
 import { Button } from "@/components/atoms/button/Button";
 import { Input } from "@/components/atoms/input/Input";
-import { Text } from "@/components/atoms/text/Text";
+import { Container } from "@/components/molecules/Container";
+import { Title } from "@/components/molecules/title";
 import { css } from "@emotion/react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 export default function SignIn() {
-  const topRowStyle = css`
-    height: 100px !important;
-  `;
-
-  const topColStyle = css`
-    margin: auto;
+  const groupBtnStyle = css`
+    width: 100%;
+    text-align: center;
   `;
 
   return (
-    <>
-      <style>
-        {`
-          .container-fluid {
-            background-color: #eeeeee;
-            max-width: 768px;
-          }
-
-          .row {
-            height: 70px;
-          }
-        `}
-      </style>
-      <Container fluid>
-        <Row css={topRowStyle}>
-          <Col css={topColStyle}>
-            <Text as="h2" center>일정 관리</Text>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Input placeholder="Email" clearButton></Input>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Input placeholder="Password" type="password" clearButton></Input>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Button align="right" primary>Sign In</Button>
-          </Col>
-        </Row>
-      </Container>
-    </>
-  )
+    <Container>
+      <Title>
+        일정 관리
+      </Title>
+      <Row>
+        <Col>
+          <Input placeholder="Email" type="email" clearButton></Input>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Input placeholder="Password" type="password" clearButton></Input>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Button align="right" primary>
+            Sign In
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div css={groupBtnStyle}>
+            <Button>Find Password</Button>
+            <Button>Sign Up</Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  );
 }

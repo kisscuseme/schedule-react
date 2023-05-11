@@ -22,5 +22,5 @@ export interface ButtonProps {
   /**
    * 버튼 위치
    */
-  align?: "left" | "center" | "right";
+  align?: "left" | "center" | "right" | "none";
 }

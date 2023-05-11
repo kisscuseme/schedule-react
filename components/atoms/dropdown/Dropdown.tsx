@@ -23,47 +23,50 @@ export const Dropdown = ({
     ${sizeStyles[size]}
   `;
 
+  const primaryStyle = `
+    --bs-btn-color: ${color};
+    --bs-btn-bg: ${backgroundColor};
+    --bs-btn-border-color: ${backgroundColor};
+    --bs-btn-hover-color: ${color};
+    --bs-btn-hover-bg: ${backgroundColor};
+    --bs-btn-hover-border-color: ${backgroundColor};
+    --bs-btn-focus-shadow-rgb: 49,132,253;
+    --bs-btn-active-color: ${color};
+    --bs-btn-active-bg: ${backgroundColor};
+    --bs-btn-active-border-color: ${backgroundColor};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: ${color};
+    --bs-btn-disabled-bg: ${backgroundColor};
+    --bs-btn-disabled-border-color: ${backgroundColor};  
+  `;
+
+  const dropdownMenuStyle = `
+    --bs-dropdown-link-active-color: ${color};
+    --bs-dropdown-link-active-bg: ${backgroundColor};
+    ${sizeStyles[size]}
+  `;
+
   return (
-    <>
-      <style>
-        {`
-          .dropdown .btn-primary {
-            --bs-btn-color: ${color};
-            --bs-btn-bg: ${backgroundColor};
-            --bs-btn-border-color: ${backgroundColor};
-            --bs-btn-hover-color: ${color};
-            --bs-btn-hover-bg: ${backgroundColor};
-            --bs-btn-hover-border-color: ${backgroundColor};
-            --bs-btn-focus-shadow-rgb: 49,132,253;
-            --bs-btn-active-color: ${color};
-            --bs-btn-active-bg: ${backgroundColor};
-            --bs-btn-active-border-color: ${backgroundColor};
-            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color: ${color};
-            --bs-btn-disabled-bg: ${backgroundColor};
-            --bs-btn-disabled-border-color: ${backgroundColor};
-          }
+    <BootstrapDropdown {...props}>
+      <BootstrapDropdown.Toggle
+        variant="primary"
+        id={id}
+        css={css([defaultStyle, customStyle, primaryStyle])}
+      >
+        {initText}
+      </BootstrapDropdown.Toggle>
 
-          .dropdown-menu {
-            --bs-dropdown-link-active-color: ${color};
-            --bs-dropdown-link-active-bg: ${backgroundColor};
-            ${sizeStyles[size]}
-          }
-        `}
-      </style>
-      <BootstrapDropdown {...props}>
-        <BootstrapDropdown.Toggle
-          variant="primary"
-          id={id}
-          css={css([defaultStyle, customStyle])}
-        >
-          {initText}
-        </BootstrapDropdown.Toggle>
-
-        <BootstrapDropdown.Menu>
-          {items.map(item => <BootstrapDropdown.Item href={item["href"]} key={item["key"]} eventKey={item["key"]}>{item["label"]}</BootstrapDropdown.Item>)}
-        </BootstrapDropdown.Menu>
-      </BootstrapDropdown>
-    </>
+      <BootstrapDropdown.Menu css={css(dropdownMenuStyle)}>
+        {items.map(item =>
+          <BootstrapDropdown.Item
+            href={item["href"]}
+            key={item["key"]}
+            eventKey={item["key"]}
+          >
+            {item["label"]}
+          </BootstrapDropdown.Item>
+        )}
+      </BootstrapDropdown.Menu>
+    </BootstrapDropdown>
   );
 };
