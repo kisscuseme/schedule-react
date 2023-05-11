@@ -8,56 +8,62 @@ import { css } from '@emotion/react';
  */
 export const Dropdown = ({
   size = "medium",
-  backgroundColor,
-  color,
+  backgroundColor = "#ffffff",
+  color = "#1e1e1e",
   initText,
   id,
   items,
   ...props
 }: DropdownProps) => {
-  const _color = color ? color : '#1e1e1e';
-  const _backgroundColor = backgroundColor ? backgroundColor : '#ffffff';
-
-  const colorStyle = css`color: ${_color}`;
-  const backgroundStyle = css`background-color: ${_backgroundColor}`;
-  const sizeStyle = css`${sizeStyles[size]}`;
-  const hoverStyle = css`&:hover {color: ${_backgroundColor}; background-color: ${_color}}`;
-
-  const primaryStyle = css`
-    --bs-btn-color: ${_color};
-    --bs-btn-bg: ${_backgroundColor};
-    --bs-btn-border-color: ${_backgroundColor};
-    --bs-btn-hover-color: ${_color};
-    --bs-btn-hover-bg: ${_backgroundColor};
-    --bs-btn-hover-border-color: ${_backgroundColor};
-    --bs-btn-focus-shadow-rgb: 49,132,253;
-    --bs-btn-active-color: ${_color};
-    --bs-btn-active-bg: ${_backgroundColor};
-    --bs-btn-active-border-color: ${_backgroundColor};
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --bs-btn-disabled-color: ${_color};
-    --bs-btn-disabled-bg: ${_backgroundColor};
-    --bs-btn-disabled-border-color: ${_backgroundColor};
+  const customStyle = `
+    &:hover {
+      color: ${backgroundColor};
+      background-color: ${color};
+    }
+    ${sizeStyles[size]}
   `;
 
-    const dropdownMenuStyle = css`
-      --bs-dropdown-link-active-color: ${_color};
-      --bs-dropdown-link-active-bg: ${_backgroundColor};
-    `;
-
   return (
-    <BootstrapDropdown {...props}>
-      <BootstrapDropdown.Toggle
-        variant="primary"
-        id={id}
-        css={css([defaultStyle, colorStyle, backgroundStyle, sizeStyle, hoverStyle, primaryStyle])}
-      >
-        {initText}
-      </BootstrapDropdown.Toggle>
+    <>
+      <style>
+        {`
+          .dropdown .btn-primary {
+            --bs-btn-color: ${color};
+            --bs-btn-bg: ${backgroundColor};
+            --bs-btn-border-color: ${backgroundColor};
+            --bs-btn-hover-color: ${color};
+            --bs-btn-hover-bg: ${backgroundColor};
+            --bs-btn-hover-border-color: ${backgroundColor};
+            --bs-btn-focus-shadow-rgb: 49,132,253;
+            --bs-btn-active-color: ${color};
+            --bs-btn-active-bg: ${backgroundColor};
+            --bs-btn-active-border-color: ${backgroundColor};
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: ${color};
+            --bs-btn-disabled-bg: ${backgroundColor};
+            --bs-btn-disabled-border-color: ${backgroundColor};
+          }
 
-      <BootstrapDropdown.Menu css={css(sizeStyle, dropdownMenuStyle)}>
-        {items.map(item => <BootstrapDropdown.Item href={item["href"]} key={item["key"]} eventKey={item["key"]}>{item["label"]}</BootstrapDropdown.Item>)}
-      </BootstrapDropdown.Menu>
-    </BootstrapDropdown>
+          .dropdown-menu {
+            --bs-dropdown-link-active-color: ${color};
+            --bs-dropdown-link-active-bg: ${backgroundColor};
+            ${sizeStyles[size]}
+          }
+        `}
+      </style>
+      <BootstrapDropdown {...props}>
+        <BootstrapDropdown.Toggle
+          variant="primary"
+          id={id}
+          css={css([defaultStyle, customStyle])}
+        >
+          {initText}
+        </BootstrapDropdown.Toggle>
+
+        <BootstrapDropdown.Menu>
+          {items.map(item => <BootstrapDropdown.Item href={item["href"]} key={item["key"]} eventKey={item["key"]}>{item["label"]}</BootstrapDropdown.Item>)}
+        </BootstrapDropdown.Menu>
+      </BootstrapDropdown>
+    </>
   );
 };

@@ -24,11 +24,7 @@ export interface InputProps {
    */
   borderColor?: string;
   /**
-   * onChange Handler
-   */
-  onChange?: () => {};
-  /**
-   * onClick Handler
+   * 클리어 버튼 보임 여부
    */
   clearButton?: boolean;
 }

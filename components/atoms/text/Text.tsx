@@ -15,27 +15,26 @@ export const Text = <E extends React.ElementType>({
   ...props
 }: TextProps<E>) => {
   const Component = as || 'div';
-  
-  const textStyles = [defaultStyle];
+  const customStyle: string[] = [];
 
   if(color) {
-    const colorStyle = css`color: ${color}`;
-    textStyles.push(colorStyle);
+    const colorStyle = `color: ${color}`;
+    customStyle.push(colorStyle);
   }
 
   if(['h1','h2','h3','h4','h5','h6'].indexOf(as as string) < 0) {
-    const sizeStyle = css`${sizeStyles[size]}`;
-    textStyles.push(sizeStyle);
+    const sizeStyle = `${sizeStyles[size]}`;
+    customStyle.push(sizeStyle);
   }
 
   if(center) {
-    const centerStyle = css`text-align: center;`;
-    textStyles.push(centerStyle);
+    const centerStyle = `text-align: center;`;
+    customStyle.push(centerStyle);
   }
 
   return (
     <Component
-      css={css(textStyles)}
+      css={css([defaultStyle, customStyle])}
       {...props}
     >
       {children}

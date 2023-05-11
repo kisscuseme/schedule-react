@@ -18,5 +18,9 @@ export interface ButtonProps {
   /**
    * 버튼 텍스트
    */
-  label: string;
+  children: string;
+  /**
+   * 버튼 위치
+   */
+  align?: "left" | "center" | "right";
 }

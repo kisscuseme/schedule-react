@@ -9,25 +9,62 @@ import { css } from '@emotion/react';
 export const Button = ({
   primary = false,
   size = "medium",
-  backgroundColor,
-  color,
-  label,
+  backgroundColor = "#ffffff",
+  color = "#6e6e6e",
+  children,
+  align = "left",
   ...props
 }: ButtonProps) => {
-  const _color = color ? color : (primary ? '#1e1e1e' : '#6e6e6e');
-  const _backgroundColor = backgroundColor ? backgroundColor : '#ffffff';
 
-  const colorStyle = css`color: ${_color}`;
-  const backgroundStyle = css`background-color: ${_backgroundColor}`;
-  const hoverStyle = css`&:hover {color: ${_backgroundColor}; background-color: ${_color}}`;
-  const sizeStyle = css`${sizeStyles[size]}`;
+  if(primary) {
+    backgroundColor = "#eeeeee";
+    color = "#1e1e1e";
+  }
+
+  const customStyle = `
+    color: ${color};
+    background-color: ${backgroundColor};
+    &:hover {
+      color: ${backgroundColor};
+      background-color: ${color};
+    }
+    ${sizeStyles[size]}
+  `;
 
   return (
-    <BootstrapButton
-      css={css([defaultStyle, colorStyle, backgroundStyle, hoverStyle, sizeStyle])}
-      {...props}
-    >
-      {label}
-    </BootstrapButton>
+    <>
+      <style>
+        {`
+          .btn-parent {
+            text-align: ${align};
+          }
+
+          .btn-primary {
+            --bs-btn-color: ${color};
+            --bs-btn-bg: ${backgroundColor};
+            --bs-btn-border-color: ${backgroundColor};
+            --bs-btn-hover-color: ${color};
+            --bs-btn-hover-bg: ${backgroundColor};
+            --bs-btn-hover-border-color: ${backgroundColor};
+            --bs-btn-focus-shadow-rgb: 49,132,253;
+            --bs-btn-active-color: ${color};
+            --bs-btn-active-bg: ${backgroundColor};
+            --bs-btn-active-border-color: ${backgroundColor};
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: ${color};
+            --bs-btn-disabled-bg: ${backgroundColor};
+            --bs-btn-disabled-border-color: ${backgroundColor};
+          }
+        `}
+      </style>
+      <div className='btn-parent'>
+        <BootstrapButton
+          css={css([defaultStyle, customStyle])}
+          {...props}
+        >
+          {children}
+        </BootstrapButton>
+      </div>
+    </>
   );
 };
