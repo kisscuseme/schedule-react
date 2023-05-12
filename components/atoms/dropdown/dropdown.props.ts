@@ -18,14 +18,22 @@ export interface DropdownProps {
   /**
    * ID
    */
-  id: string;
+  id?: string;
   /**
    * 데이터
    */
   items: DropdownDataProps[];
+  /**
+   * Dropdown 위치
+   */
+  align?: "left" | "center" | "right" | "none";
+  /**
+   * Dropdown Click Handler
+   */
+  onClickHandler: (label: string) => void;
 }
 
-type DropdownDataProps = {
+export type DropdownDataProps = {
   key: string;
   href: string;
   label: string;

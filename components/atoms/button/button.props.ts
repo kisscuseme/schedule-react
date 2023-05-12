@@ -23,4 +23,8 @@ export interface ButtonProps {
    * 버튼 위치
    */
   align?: "left" | "center" | "right" | "none";
+  /**
+   * 버튼 Click Handler
+   */
+  onClickHandler: () => void;
 }

@@ -2,22 +2,30 @@ import { Dropdown as BootstrapDropdown } from 'react-bootstrap';
 import { DropdownProps } from "./dropdown.props";
 import { defaultStyle, sizeStyles } from './dropdown.styles';
 import { css } from '@emotion/react';
+import { useState } from 'react';
 
 /**
  * 기본 드롭다운 컴포넌트
  */
 export const Dropdown = ({
   size = "medium",
-  backgroundColor = "#ffffff",
+  backgroundColor = "transparent",
   color = "#1e1e1e",
   initText,
   id,
   items,
+  align,
+  onClickHandler,
   ...props
 }: DropdownProps) => {
+  const [selectedText, setSelectedText] = useState(initText);
+  const parentStyle = `
+    ${align === "center" ? "width:100%;text-align:center;" : ("float: " + align)}
+  `;
+
   const customStyle = `
     &:hover {
-      color: ${backgroundColor};
+      color: ${backgroundColor === 'transparent'?'#ffffff':backgroundColor};
       background-color: ${color};
     }
     ${sizeStyles[size]}
@@ -47,13 +55,13 @@ export const Dropdown = ({
   `;
 
   return (
-    <BootstrapDropdown {...props}>
+    <BootstrapDropdown css={css(parentStyle)} {...props}>
       <BootstrapDropdown.Toggle
         variant="primary"
         id={id}
         css={css([defaultStyle, customStyle, primaryStyle])}
       >
-        {initText}
+        {selectedText}
       </BootstrapDropdown.Toggle>
 
       <BootstrapDropdown.Menu css={css(dropdownMenuStyle)}>
@@ -62,6 +70,10 @@ export const Dropdown = ({
             href={item["href"]}
             key={item["key"]}
             eventKey={item["key"]}
+            onClick={() => {
+              setSelectedText(item["label"]);
+              onClickHandler(item["label"]);
+            }}
           >
             {item["label"]}
           </BootstrapDropdown.Item>

@@ -28,7 +28,7 @@ export const Text = <E extends React.ElementType>({
   }
 
   if(center) {
-    const centerStyle = `text-align: center;`;
+    const centerStyle = `width: 100%; text-align: center;`;
     customStyle.push(centerStyle);
   }
 

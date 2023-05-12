@@ -1,6 +1,6 @@
 export const defaultStyle = `
-  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 700;
+  display: inline-block;
+  margin: auto;
 `;
 
 export const sizeStyles = {

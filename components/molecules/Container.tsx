@@ -9,36 +9,17 @@ type ContainerProps = {
 export const Container = ({
   children
 }: ContainerProps) => {
-  const topRowStyle = css`
-    height: 150px !important;
-  `;
-
-  const topColStyle = css`
-    margin: auto;
+  const defaultStyle = `
+    background-color: #eeeeee;
+    max-width: 768px;
+    height: 100vh;
+    padding-left: 30px;
+    padding-right: 30px;
   `;
 
   return (
     <>
-      <style>
-      {`
-        .container-fluid {
-          background-color: #eeeeee;
-          max-width: 768px;
-          height: 100vh;
-          padding-left: 30px;
-          padding-right: 30px;
-        }
-
-        .row {
-          height: 70px;
-        }
-
-        .col {
-          margin: auto;
-        }
-      `}
-    </style>
-      <BootstrapContainer fluid>
+      <BootstrapContainer fluid css={css(defaultStyle)}>
         {children}
       </BootstrapContainer>
     </>

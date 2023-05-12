@@ -1,5 +1,15 @@
+import { Container } from "@/components/molecules/Container";
+import { Title } from "@/components/molecules/Title";
+import { SignUpForm } from "@/components/organisms/SignUpForm";
+
 export default function SignUp() {
+
   return (
-    <div>Sign Up</div>
-  )
+    <Container>
+      <Title>
+        회원 가입
+      </Title>
+      <SignUpForm/>
+    </Container>
+  );
 }

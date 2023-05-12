@@ -1,6 +1,4 @@
 export const defaultStyle = `
-  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 700;
   border: 0;
   outline-width: 0;
   background-color: transparent;
@@ -21,12 +19,11 @@ export const sizeStyles = {
 
 export const innerBtnStyle = `
   position: absolute;
-  font-weight: 550;
+  font-weight: 700;
   border: none;
   color: #9e9e9e;
   background-color: transparent;
   z-index: 99999;
-  margin-left: -20px;
   &:hover {
     color: #6e6e6e;
   }

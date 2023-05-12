@@ -14,6 +14,8 @@ export const Input = ({
   placeholderColor = "#bbbbbb",
   placeholder = "",
   clearButton,
+  onChangeHandler,
+  onBlurHandler,
   ...props
 }: InputProps) => {
   const [value, setValue] = useState("");
@@ -26,6 +28,8 @@ export const Input = ({
     }
     ${sizeStyles[size]}
   `;
+  
+  const innerBtnMarginStyle = type === 'date' ? `margin-left: -40px;` : `margin-left: -20px;`;
 
   return (
   <>
@@ -35,7 +39,9 @@ export const Input = ({
       placeholder={placeholder}
       onChange={(e) => {
         setValue(e.target.value);
+        if(onChangeHandler) onChangeHandler(e);
       }}
+      onBlur={onBlurHandler}
       ref={inputRef}
       {...props}
     />
@@ -44,7 +50,7 @@ export const Input = ({
         inputRef.current.value = "";
         setValue("");
       }
-    }} css={css(innerBtnStyle)}>X</button>}
+    }} css={css([innerBtnStyle, innerBtnMarginStyle])}>X</button>}
     
   </>
   );

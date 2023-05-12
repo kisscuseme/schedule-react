@@ -1,4 +1,5 @@
-type UserProps = {
+export type UserType = {
+    uid: string
     name: string
     email: string
 } | null;
