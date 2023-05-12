@@ -3,12 +3,16 @@ import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { useRouter } from "next/router";
+import { ChangeEvent, useState } from "react";
 
 export const SignInForm = () => {
   const groupBtnStyle = css`
     width: 100%;
     text-align: center;
   `;
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const router = useRouter();
 
@@ -21,6 +25,14 @@ export const SignInForm = () => {
   }
   const signUpClickHandler = () => {
     router.push('/signup');
+  }
+
+  const emailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+  }
+
+  const passwordChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value);
   }
 
   return (
@@ -38,12 +50,22 @@ export const SignInForm = () => {
       </style>
       <Row>
         <Col>
-          <Input placeholder="Email" type="email"></Input>
+          <Input
+            placeholder="Email"
+            type="email"
+            onChange={emailChangeHandler}
+            clearButton={setEmail}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="Password" type="password"></Input>
+          <Input
+            placeholder="Password"
+            type="password"
+            onChange={passwordChangeHandler}
+            clearButton={setPassword}
+          />
         </Col>
       </Row>
       <Row>

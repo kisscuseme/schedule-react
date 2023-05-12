@@ -45,7 +45,7 @@ export const Input = ({
         }}
         {...props}
       />
-      {clearButton && type !== "date" && type !== "password" && value != "" && (
+      {clearButton && type !== "date" && value != "" && (
         <button
           onClick={() => {
             if (inputRef.current) {
