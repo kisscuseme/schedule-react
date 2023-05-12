@@ -1,4 +1,4 @@
-import { HTMLProps } from "react";
+import { ChangeEventHandler, Dispatch, HTMLProps, SetStateAction } from "react";
 
 interface InputOwnProps {
   /**
@@ -26,9 +26,13 @@ interface InputOwnProps {
    */
   borderColor?: string;
   /**
-   * 클리어 버튼 보임 여부
+   * 클리어 버튼 수행 시 적용할 setState
    */
-  clearButton?: boolean;
+  clearButton?: Dispatch<SetStateAction<string>>;
+  /**
+   * onChange Handler
+   */
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
 export type InputProps = InputOwnProps & Omit<HTMLProps<HTMLInputElement>, "size">

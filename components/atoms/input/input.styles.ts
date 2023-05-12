@@ -24,7 +24,9 @@ export const innerBtnStyle = `
   color: #9e9e9e;
   background-color: transparent;
   z-index: 99999;
-  &:hover {
-    color: #6e6e6e;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: #6e6e6e;
+    }
   }
 `;

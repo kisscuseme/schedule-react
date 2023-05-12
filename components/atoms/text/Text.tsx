@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
  * 기본 텍스트 컴포넌트
  */
 export const Text = <E extends React.ElementType>({
-  size = "medium",
+  size = "large",
   children,
   as,
   color,

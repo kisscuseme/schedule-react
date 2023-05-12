@@ -2,26 +2,28 @@ import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { css } from "@emotion/react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
+import { getToday } from "@/services/util/util";
 
 export const ScheduleInputForm = () => {
-  const dateArr = (new Date()).toLocaleDateString().replaceAll(" ", "").split(".");
-  const today = dateArr[0] + "-" + ("0"+dateArr[1]).substr(-2, 2) + "-" + ("0"+dateArr[2]).substr(-2, 2);
+  const [fromDate, setFromdate] = useState(getToday());
+  const [toDate, setTodate] = useState(getToday());
+  const [schedule, setSchedule] = useState("");
 
   const addScheduleClickHandler = () => {
     alert("일정 등록 구현 예정");
   }
 
   const selectFromDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value);
+    setFromdate(e.currentTarget.value);
   }
 
   const selectToDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value);
+    setTodate(e.currentTarget.value);
   }
 
   const scheduleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value);
+    setSchedule(e.currentTarget.value);
   }
 
   const dateMiddleStyle = `
@@ -44,23 +46,41 @@ export const ScheduleInputForm = () => {
       </style>
       <Row>
         <Col>
-          <Input type="date" value={today} onChange={selectFromDateHandler}></Input>
+          <Input
+            type="date"
+            value={fromDate}
+            onChange={selectFromDateHandler}
+          />
         </Col>
         <Col css={css(dateMiddleStyle)}>
           ~
         </Col>
         <Col>
-          <Input type="date" value={today} onChange={selectToDateHandler}></Input>
+          <Input
+            type="date"
+            value={toDate}
+            onChange={selectToDateHandler}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="일정 입력" type="text" clearButton onChange={scheduleChangeHandler}></Input>
+          <Input
+            placeholder="일정 입력"
+            type="text"
+            value={schedule}
+            onChange={scheduleChangeHandler}
+            clearButton={setSchedule}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
-          <Button align="right" primary onClick={addScheduleClickHandler}>
+          <Button
+            align="right"
+            primary
+            onClick={addScheduleClickHandler}
+          >
             등록
           </Button>
         </Col>

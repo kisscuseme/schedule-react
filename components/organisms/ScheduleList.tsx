@@ -17,7 +17,7 @@ export const ScheduleList = () => {
       <style>
         {`
           .schedule-list .row {
-            min-height: 40px;
+            min-height: 30px;
           }
   
           .schedule-list .col {

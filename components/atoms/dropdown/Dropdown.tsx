@@ -8,7 +8,7 @@ import { useState } from 'react';
  * 기본 드롭다운 컴포넌트
  */
 export const Dropdown = ({
-  size = "medium",
+  size = "large",
   backgroundColor = "transparent",
   color = "#1e1e1e",
   initText,
@@ -24,9 +24,11 @@ export const Dropdown = ({
   `;
 
   const customStyle = `
-    &:hover {
-      color: ${backgroundColor === 'transparent'?'#ffffff':backgroundColor};
-      background-color: ${color};
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: ${backgroundColor === 'transparent'?'#ffffff':backgroundColor};
+        background-color: ${color};
+      }
     }
     ${sizeStyles[size]}
   `;

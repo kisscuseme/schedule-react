@@ -22,22 +22,22 @@ export const SignUpForm = () => {
       </style>
       <Row>
         <Col>
-          <Input placeholder="Email" type="email" clearButton></Input>
+          <Input placeholder="Email" type="email"></Input>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="Name" type="text" clearButton></Input>
+          <Input placeholder="Name" type="text"></Input>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="Password" type="password" clearButton></Input>
+          <Input placeholder="Password" type="password"></Input>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="Reconfirm Password" type="password" clearButton></Input>
+          <Input placeholder="Reconfirm Password" type="password"></Input>
         </Col>
       </Row>
       <Row>

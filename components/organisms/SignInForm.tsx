@@ -38,12 +38,12 @@ export const SignInForm = () => {
       </style>
       <Row>
         <Col>
-          <Input placeholder="Email" type="email" clearButton></Input>
+          <Input placeholder="Email" type="email"></Input>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="Password" type="password" clearButton></Input>
+          <Input placeholder="Password" type="password"></Input>
         </Col>
       </Row>
       <Row>

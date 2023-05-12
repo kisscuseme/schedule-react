@@ -8,7 +8,7 @@ import { css } from '@emotion/react';
  */
 export const Button = ({
   primary = false,
-  size = "medium",
+  size = "large",
   backgroundColor = "transparent",
   color = "#aeaeae",
   children,
@@ -23,9 +23,11 @@ export const Button = ({
   const customStyle = `
     color: ${color};
     background-color: ${backgroundColor};
-    &:hover {
-      color: ${backgroundColor === 'transparent'?'#ffffff':backgroundColor};
-      background-color: ${color};
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: ${backgroundColor === 'transparent'?'#ffffff':backgroundColor};
+        background-color: ${color};
+      }
     }
     ${sizeStyles[size]}
   `;
