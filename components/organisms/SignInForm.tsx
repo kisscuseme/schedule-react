@@ -48,7 +48,7 @@ export const SignInForm = () => {
       </Row>
       <Row>
         <Col>
-          <Button align="right" primary onClickHandler={signInClickHandler}>
+          <Button align="right" primary onClick={signInClickHandler}>
             Sign In
           </Button>
         </Col>
@@ -56,8 +56,8 @@ export const SignInForm = () => {
       <Row>
         <Col>
           <div css={groupBtnStyle}>
-            <Button onClickHandler={findPasswordClickHandler}>Find Password</Button>
-            <Button onClickHandler={signUpClickHandler}>Sign Up</Button>
+            <Button onClick={findPasswordClickHandler}>Find Password</Button>
+            <Button onClick={signUpClickHandler}>Sign Up</Button>
           </div>
         </Col>
       </Row>

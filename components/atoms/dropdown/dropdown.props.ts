@@ -1,4 +1,6 @@
-export interface DropdownProps {
+import { DropdownProps as BootstrapDropdownProps } from 'react-bootstrap';
+
+interface DropdownOwnProps {
   /**
    * 배경 색상
    */
@@ -28,10 +30,12 @@ export interface DropdownProps {
    */
   align?: "left" | "center" | "right" | "none";
   /**
-   * Dropdown Click Handler
+   * Dropdown Click Item Handler
    */
-  onClickHandler: (label: string) => void;
+  onClickItemHandler: (label: string) => void;
 }
+
+export type DropdownProps = DropdownOwnProps & Omit<BootstrapDropdownProps, "align" | "children">;
 
 export type DropdownDataProps = {
   key: string;

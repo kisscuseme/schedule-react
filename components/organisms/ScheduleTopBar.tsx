@@ -21,7 +21,7 @@ export const ScheduleTopBar = () => {
       <Text as="h3">
         일정
       </Text>
-      <Dropdown initText="2023" items={data} align="right" onClickHandler={selectYear}/>
+      <Dropdown initText="2023" items={data} align="right" onClickItemHandler={selectYear}/>
   </TopBar>
   )
 }

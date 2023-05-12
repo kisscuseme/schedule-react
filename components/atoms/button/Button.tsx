@@ -2,7 +2,6 @@ import { Button as BootstrapButton } from 'react-bootstrap';
 import { ButtonProps } from "./button.props";
 import { defaultStyle, sizeStyles } from './button.styles';
 import { css } from '@emotion/react';
-import { useRef } from 'react';
 
 /**
  * 기본 버튼 컴포넌트
@@ -14,7 +13,6 @@ export const Button = ({
   color = "#aeaeae",
   children,
   align = "none",
-  onClickHandler,
   ...props
 }: ButtonProps) => {
   if(primary) {
@@ -60,7 +58,6 @@ export const Button = ({
       <div css={css(parentStyle)}>
         <BootstrapButton
           css={css([defaultStyle, customStyle, btnPrimaryStyle])}
-          onClick={onClickHandler}
           {...props}
         >
           {children}

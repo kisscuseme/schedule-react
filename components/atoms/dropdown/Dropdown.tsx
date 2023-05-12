@@ -15,7 +15,7 @@ export const Dropdown = ({
   id,
   items,
   align,
-  onClickHandler,
+  onClickItemHandler,
   ...props
 }: DropdownProps) => {
   const [selectedText, setSelectedText] = useState(initText);
@@ -72,7 +72,7 @@ export const Dropdown = ({
             eventKey={item["key"]}
             onClick={() => {
               setSelectedText(item["label"]);
-              onClickHandler(item["label"]);
+              onClickItemHandler(item["label"]);
             }}
           >
             {item["label"]}

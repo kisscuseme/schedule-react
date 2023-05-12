@@ -1,4 +1,6 @@
-export interface ButtonProps {
+import { ButtonProps as BootstrapButtonProps } from 'react-bootstrap';
+
+interface ButtonOwnProps {
   /**
    * 주요 버튼 여부
    */
@@ -16,15 +18,9 @@ export interface ButtonProps {
    */
   size?: "small" | "medium" | "large";
   /**
-   * 버튼 텍스트
-   */
-  children: string;
-  /**
    * 버튼 위치
    */
   align?: "left" | "center" | "right" | "none";
-  /**
-   * 버튼 Click Handler
-   */
-  onClickHandler: () => void;
 }
+
+export type ButtonProps = ButtonOwnProps & Omit<BootstrapButtonProps, "size">

@@ -5,6 +5,9 @@ import { css } from "@emotion/react";
 import { ChangeEvent } from "react";
 
 export const ScheduleInputForm = () => {
+  const dateArr = (new Date()).toLocaleDateString().replaceAll(" ", "").split(".");
+  const today = dateArr[0] + "-" + ("0"+dateArr[1]).substr(-2, 2) + "-" + ("0"+dateArr[2]).substr(-2, 2);
+
   const addScheduleClickHandler = () => {
     alert("일정 등록 구현 예정");
   }
@@ -41,23 +44,23 @@ export const ScheduleInputForm = () => {
       </style>
       <Row>
         <Col>
-          <Input placeholder="Date" type="date" clearButton onChangeHandler={selectFromDateHandler}></Input>
+          <Input type="date" value={today} onChange={selectFromDateHandler}></Input>
         </Col>
         <Col css={css(dateMiddleStyle)}>
           ~
         </Col>
         <Col>
-          <Input placeholder="Date" type="date" clearButton onChangeHandler={selectToDateHandler}></Input>
+          <Input type="date" value={today} onChange={selectToDateHandler}></Input>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Input placeholder="일정 입력" type="text" clearButton onChangeHandler={scheduleChangeHandler}></Input>
+          <Input placeholder="일정 입력" type="text" clearButton onChange={scheduleChangeHandler}></Input>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Button align="right" primary onClickHandler={addScheduleClickHandler}>
+          <Button align="right" primary onClick={addScheduleClickHandler}>
             등록
           </Button>
         </Col>

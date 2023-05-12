@@ -28,7 +28,7 @@ export const ScheduleList = () => {
           .schedule-list .col-5 {
             color: #8e8e8e;
             margin: auto;
-            max-width: 100px;
+            max-width: 120px;
           }
         `}
       </style>

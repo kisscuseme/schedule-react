@@ -1,6 +1,6 @@
-import { ChangeEventHandler, FocusEventHandler } from "react";
+import { HTMLProps } from "react";
 
-export interface InputProps {
+interface InputOwnProps {
   /**
    * 타입
    */
@@ -29,16 +29,6 @@ export interface InputProps {
    * 클리어 버튼 보임 여부
    */
   clearButton?: boolean;
-  /**
-   * ID
-   */
-  id?: string;
-  /**
-   * onChange Handler
-   */
-  onChangeHandler?: ChangeEventHandler;
-  /**
-   * onBlur Handler
-   */
-  onBlurHandler?: FocusEventHandler;
 }
+
+export type InputProps = InputOwnProps & Omit<HTMLProps<HTMLInputElement>, "size">

@@ -42,7 +42,7 @@ export const SignUpForm = () => {
       </Row>
       <Row>
         <Col>
-          <Button align="right" primary onClickHandler={regstrationClickHandler}>
+          <Button align="right" primary onClick={regstrationClickHandler}>
             Registrantion
           </Button>
         </Col>
