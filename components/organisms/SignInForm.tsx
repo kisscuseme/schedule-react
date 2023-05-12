@@ -19,9 +19,33 @@ export const SignInForm = () => {
   const signInClickHandler = () => {
     alert("일정 페이지로 임시 이동");
     router.replace('/schedule');
+
+    try {
+      // auth 서비스 이메일 로그인 함수 수행
+      // firbaseAuth.emailLogin(email, password);
+    } catch(error) {
+      console.log(error);
+    }
+    
+    
   }
-  const findPasswordClickHandler = () => {
-    alert("Find Password 구현 예정");
+  const resetPasswordClickHandler = () => {
+    if (email === ""){
+      alert("메일 주소를 입력해주세요.");
+    }
+    else{
+      try {
+        const result = confirm(email + "으로 비밀번호 초기화 메일을 발송 하시겠습니까?");
+
+        if(result) {
+          // auth 서비스 비밀번호 초기화 메일 발송 함수 수행
+          // firebaseAuth.resetPassword(email);
+        }
+      }
+      catch(error) {
+        console.log(error);
+      }
+    }
   }
   const signUpClickHandler = () => {
     router.push('/signup');
@@ -78,7 +102,7 @@ export const SignInForm = () => {
       <Row>
         <Col>
           <div css={groupBtnStyle}>
-            <Button onClick={findPasswordClickHandler}>Find Password</Button>
+            <Button onClick={resetPasswordClickHandler}>Reset Password</Button>
             <Button onClick={signUpClickHandler}>Sign Up</Button>
           </div>
         </Col>
