@@ -12,7 +12,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig, process.env.NEXT_PUBLIC_FIREBASE_APP_NAME);
 const firebaseAuth = getAuth(firebaseApp);
 
 export { firebaseAuth };
