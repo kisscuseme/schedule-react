@@ -15,11 +15,13 @@ export const ScheduleInputForm = () => {
   }
 
   const selectFromDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setFromdate(e.currentTarget.value);
+    if(toDate < e.currentTarget.value) setFromdate(toDate);
+    else setFromdate(e.currentTarget.value);
   }
 
   const selectToDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setTodate(e.currentTarget.value);
+    if(fromDate > e.currentTarget.value) setTodate(fromDate);
+    else setTodate(e.currentTarget.value);
   }
 
   const scheduleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {

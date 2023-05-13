@@ -11,7 +11,7 @@ export const Text = <E extends React.ElementType>({
   children,
   as,
   color,
-  center,
+  align,
   ...props
 }: TextProps<E>) => {
   const Component = as || 'div';
@@ -27,10 +27,8 @@ export const Text = <E extends React.ElementType>({
     customStyle.push(sizeStyle);
   }
 
-  if(center) {
-    const centerStyle = `width: 100%; text-align: center;`;
-    customStyle.push(centerStyle);
-  }
+  const centerStyle = align === "center" ? "width:100%;text-align:center;" : ("float: " + align);
+  customStyle.push(centerStyle);
 
   return (
     <Component

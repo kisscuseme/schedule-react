@@ -4,6 +4,10 @@ import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
+import { checkEmail } from "@/services/util/util";
+import { Text } from "../atoms/text/Text";
+import { firebaseAuth } from "@/services/firebase/firebase";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 
 export const SignInForm = () => {
   const groupBtnStyle = css`
@@ -13,40 +17,66 @@ export const SignInForm = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const router = useRouter();
 
-  const signInClickHandler = () => {
-    alert("일정 페이지로 임시 이동");
-    router.replace('/schedule');
-
+  const signIn = async () => {
     try {
-      // auth 서비스 이메일 로그인 함수 수행
-      // firbaseAuth.emailLogin(email, password);
-    } catch(error) {
-      console.log(error);
-    }
-    
-    
-  }
-  const resetPasswordClickHandler = () => {
-    if (email === ""){
-      alert("메일 주소를 입력해주세요.");
-    }
-    else{
-      try {
-        const result = confirm(email + "으로 비밀번호 초기화 메일을 발송 하시겠습니까?");
-
-        if(result) {
-          // auth 서비스 비밀번호 초기화 메일 발송 함수 수행
-          // firebaseAuth.resetPassword(email);
-        }
+      const curUserInfo = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      return curUserInfo;
+      
+    } catch (error: any) {
+      switch (error.code) {
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          setErrorMsg("이메일 주소 또는 비밀번호가 잘못되었습니다.");
+          break;
+        default:
+          setErrorMsg("로그인 중 에러가 발생하였습니다.\n" + error.message);
+          break;
       }
-      catch(error) {
+    }
+  }
+
+  const signInClickHandler = async () => {
+    if(!checkEmail(email)) {
+      setErrorMsg("이메일 형식을 확인해 주세요.");
+    } else if(password === "") {
+      setErrorMsg("패스워드를 입력해 주세요.");
+    } else {
+      const result = await signIn();
+      if(result) {
+        router.replace('/schedule');
+      }
+    }
+  }
+
+  const resetPassword = async () => {
+    try {
+      return await sendPasswordResetEmail(firebaseAuth, email);
+    } catch (error: any) {
+      setErrorMsg("메일 전송 중 에러가 발생하였습니다.\n" + error.message);
+    }
+  }
+
+  const resetPasswordClickHandler = () => {
+    if (!checkEmail(email)) {
+      setErrorMsg("이메일 형식을 확인해 주세요.");
+    } else {
+      try {
+        const result = confirm(
+          email + "으로 비밀번호 초기화 메일을 발송 하시겠습니까?"
+        );
+        if (result) {
+          resetPassword();
+        }
+      } catch (error) {
         console.log(error);
       }
     }
-  }
+  };
+
   const signUpClickHandler = () => {
     router.push('/signup');
   }
@@ -105,6 +135,11 @@ export const SignInForm = () => {
             <Button onClick={resetPasswordClickHandler}>Reset Password</Button>
             <Button onClick={signUpClickHandler}>Sign Up</Button>
           </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Text align="center" color="hotpink">{errorMsg}</Text>
         </Col>
       </Row>
     </div>

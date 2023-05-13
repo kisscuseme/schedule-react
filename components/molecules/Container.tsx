@@ -10,7 +10,7 @@ export const Container = ({
   children
 }: ContainerProps) => {
   const defaultStyle = `
-    background-color: #eeeeee;
+    background-color: #f2f2f2;
     max-width: 768px;
     height: 100vh;
     padding-left: 30px;

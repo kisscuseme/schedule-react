@@ -14,9 +14,9 @@ interface TextOwnProps<E extends React.ElementType> {
    */
   size?: "small" | "medium" | "large";
   /**
-   * 중앙 정렬
+   * 정렬
    */
-  center?: boolean;
+  align?: "left" | "center" | "right" | "none";
   /**
    * 텍스트 내용
    */

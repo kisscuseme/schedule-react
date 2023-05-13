@@ -21,7 +21,7 @@ export const Title = ({
   return (
     <Row css={topRowStyle}>
       <Col css={topColStyle}>
-        <Text as="h2" center>{children}</Text>
+        <Text as="h2" align="center">{children}</Text>
       </Col>
     </Row>
   )

@@ -1,7 +1,6 @@
 export const defaultStyle = `
     display: inline-block;
     margin: auto;
-    vertical-align: text-top;
 `;
 
 export const sizeStyles = {

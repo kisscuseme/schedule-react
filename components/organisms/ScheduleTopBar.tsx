@@ -1,10 +1,19 @@
+import { getToday } from "@/services/util/util";
 import { css } from "@emotion/react";
+import { Col, Row } from "react-bootstrap";
 import { Dropdown } from "../atoms/dropdown/Dropdown";
 import { DropdownDataProps } from "../atoms/dropdown/dropdown.props";
 import { Text } from "../atoms/text/Text";
-import { TopBar } from "../molecules/TopBar";
 
 export const ScheduleTopBar = () => {
+  const topRowStyle = css`
+    height: 70px !important;
+  `;
+
+  const topColStyle = css`
+    margin: auto;
+  `;
+
   const data: DropdownDataProps[] = [
     { key: "1", href: "#", label: "2022" },
     { key: "2", href: "#", label: "2023" },
@@ -16,12 +25,16 @@ export const ScheduleTopBar = () => {
     alert(year + " 선택");
   }
 
+  const initText = getToday().substring(0, 4);
+
   return (
-    <TopBar>
-      <Text as="h3">
-        일정
-      </Text>
-      <Dropdown initText="2023" items={data} align="right" onClickItemHandler={selectYear}/>
-  </TopBar>
+    <Row css={topRowStyle}>
+      <Col css={topColStyle}>
+        <Text as="h3">일정</Text>
+      </Col>
+      <Col css={topColStyle}>
+        <Dropdown initText={initText} items={data} align="right" onClickItemHandler={selectYear}/>
+      </Col>
+    </Row>
   )
 }

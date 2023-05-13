@@ -10,13 +10,12 @@ export const Button = ({
   primary = false,
   size = "large",
   backgroundColor = "transparent",
-  color = "#aeaeae",
+  color = "#9e9e9e",
   children,
   align = "none",
   ...props
 }: ButtonProps) => {
   if(primary) {
-    backgroundColor = "#eeeeee";
     color = "#1e1e1e";
   }
 

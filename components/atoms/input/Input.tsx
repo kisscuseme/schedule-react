@@ -11,7 +11,7 @@ export const Input = ({
   size = "large",
   color = "#1e1e1e",
   borderColor = "#1e1e1e",
-  placeholderColor = "#bbbbbb",
+  placeholderColor = "#aeaeae",
   placeholder = "",
   clearButton,
   onChange,
@@ -29,7 +29,7 @@ export const Input = ({
   
   const borderStyle = `
     border-bottom: 1px solid ${borderColor};
-    ${clearButton? "padding-right:20px" : ""}
+    ${clearButton? "padding-right:15px" : ""}
   `;
 
   return (
