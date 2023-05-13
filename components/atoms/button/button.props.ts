@@ -1,3 +1,4 @@
+import { RefObject } from 'react';
 import { ButtonProps as BootstrapButtonProps } from 'react-bootstrap';
 
 interface ButtonOwnProps {
@@ -21,6 +22,10 @@ interface ButtonOwnProps {
    * 버튼 위치
    */
   align?: "left" | "center" | "right" | "none";
+  /**
+   * 버튼 Ref
+   */
+  btnRef?: RefObject<HTMLButtonElement>;
 }
 
 export type ButtonProps = ButtonOwnProps & Omit<BootstrapButtonProps, "size">

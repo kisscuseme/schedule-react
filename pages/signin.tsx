@@ -1,10 +1,8 @@
-import { Container } from "@/components/molecules/Container";
+import { Container } from "@/components/atoms/container/Container";
 import { Title } from "@/components/molecules/Title";
-import { ScheduleTopBar } from "@/components/organisms/ScheduleTopBar";
 import { SignInForm } from "@/components/organisms/SignInForm";
 
 export default function SignIn() {
-
   return (
     <Container>
       <Title>

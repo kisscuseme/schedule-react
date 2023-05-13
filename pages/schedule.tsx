@@ -1,4 +1,4 @@
-import { Container } from "@/components/molecules/Container";
+import { Container } from "@/components/atoms/container/Container";
 import { ScheduleInputForm } from "@/components/organisms/ScheduleInputForm";
 import { ScheduleList } from "@/components/organisms/ScheduleList";
 import { ScheduleTopBar } from "@/components/organisms/ScheduleTopBar";

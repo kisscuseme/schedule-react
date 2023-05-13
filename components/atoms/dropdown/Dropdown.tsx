@@ -74,7 +74,7 @@ export const Dropdown = ({
             eventKey={item["key"]}
             onClick={() => {
               setSelectedText(item["label"]);
-              onClickItemHandler(item["label"]);
+              onClickItemHandler(item["key"]);
             }}
           >
             {item["label"]}

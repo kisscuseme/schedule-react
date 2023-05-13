@@ -68,7 +68,7 @@ export const ScheduleInputForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="일정 입력"
+            placeholder="Enter your schedule"
             type="text"
             value={schedule}
             onChange={scheduleChangeHandler}
@@ -83,7 +83,7 @@ export const ScheduleInputForm = () => {
             primary
             onClick={addScheduleClickHandler}
           >
-            등록
+            Add Schedule
           </Button>
         </Col>
       </Row>
