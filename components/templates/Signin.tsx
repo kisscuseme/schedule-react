@@ -1,6 +1,6 @@
 import { Container } from "@/components/atoms/container/Container";
-import { Title } from "@/components/molecules/Title";
 import { SignInForm } from "@/components/organisms/SignInForm";
+import { Title } from "../molecules/title/Title";
 
 export default function SignIn() {
   return (

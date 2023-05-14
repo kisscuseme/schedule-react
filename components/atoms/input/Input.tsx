@@ -55,6 +55,7 @@ export const Input = ({
             }
           }}
           css={css([innerBtnStyle])}
+          tabIndex={-1}
         >
           X
         </button>

@@ -1,11 +1,12 @@
 import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { checkEmail, checkPassword } from "@/services/util/util";
 import { useRouter } from "next/router";
 import { Text } from "../atoms/text/Text";
 import { signUp } from "@/services/firebase/auth";
+import { useMutation } from "@tanstack/react-query";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -31,8 +32,36 @@ export const SignUpForm = () => {
     setReconfirmPassword(e.currentTarget.value);
   }
 
-  const regstrationClickHandler = async () => {
-    if(!checkEmail(email)) {
+  const signUpWithEmail = (loginInfo: {email: string, password: string}) => {
+    return signUp(loginInfo.email, loginInfo.password);
+  }
+
+  const signUpMutation = useMutation(signUpWithEmail, {
+    onMutate: variable => {
+      // console.log("onMutate", variable);
+    },
+    onError: (error, variable, context) => {
+      // error
+    },
+    onSuccess: (data, variables, context) => {
+      if(typeof data !== 'string') {
+        setEmail("");
+        setPassword("");
+        alert("회원 가입을 축하합니다.");
+        router.replace('/');
+      } else {
+        setErrorMsg(data);
+      }
+    },
+    onSettled: () => {
+      // console.log("end");
+    }
+  });
+
+  const signUpHandleSubmit = () => {
+    if(email === "") {
+      setErrorMsg("이메일을 입력해 주세요.");
+    } else if(!checkEmail(email)) {
       setErrorMsg("이메일 형식을 확인해 주세요.");
     } else if(name === "") {
       setErrorMsg("이름을 입력해 주세요.");
@@ -42,15 +71,13 @@ export const SignUpForm = () => {
       setErrorMsg("입력한 비밀번호가 동일하지 않습니다.");
     } else {
       setErrorMsg("");
-      const result = await signUp(email, password);
-      if(typeof result !== 'string') {
-        setEmail("");
-        setPassword("");
-        alert("회원 가입을 축하합니다.");
-        router.replace('/schedule');
-      } else {
-        setErrorMsg(result);
-      }
+      signUpMutation.mutate({ email: email, password });
+    }
+  };
+
+  const enterKeyUpEventHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === "Enter") {
+      signUpHandleSubmit();
     }
   }
 
@@ -74,6 +101,7 @@ export const SignUpForm = () => {
             type="email"
             onChange={emailChangeHandler}
             clearButton={setEmail}
+            onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
       </Row>
@@ -84,6 +112,7 @@ export const SignUpForm = () => {
             type="text"
             onChange={nameChangeHandler}
             clearButton={setName}
+            onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
       </Row>
@@ -94,6 +123,7 @@ export const SignUpForm = () => {
             type="password"
             onChange={passwordChangeHandler}
             clearButton={setPassword}
+            onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
       </Row>
@@ -104,6 +134,7 @@ export const SignUpForm = () => {
             type="password"
             onChange={reconfirmPasswordChangeHandler}
             clearButton={setReconfirmPassword}
+            onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
       </Row>
@@ -112,7 +143,7 @@ export const SignUpForm = () => {
           <Button
             align="right"
             primary
-            onClick={regstrationClickHandler}
+            onClick={signUpHandleSubmit}
           >
             Registration
           </Button>

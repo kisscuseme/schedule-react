@@ -2,14 +2,13 @@ import { Button as BootstrapButton } from 'react-bootstrap';
 import { ButtonProps } from "./button.props";
 import { defaultStyle, sizeStyles } from './button.styles';
 import { css } from '@emotion/react';
-import { useRef } from 'react';
 
 /**
  * 기본 버튼 컴포넌트
  */
 export const Button = ({
   primary = false,
-  size = "large",
+  size = "medium",
   backgroundColor = "transparent",
   color = "#9e9e9e",
   children,

@@ -1,9 +1,5 @@
-import { isLogedInState, userInfoState } from "@/states/states";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { useRouter } from "next/router";
-import { useSetRecoilState } from "recoil";
 import { firebaseAuth } from "./firebase";
-import { LoginStateType, UserType } from "./firebase.type";
 
 const signIn = async (email: string, password: string) => {
   try {
@@ -49,10 +45,9 @@ const signUp = async (email: string, password: string) => {
 const logOut = async () => {
   try {
     await signOut(firebaseAuth);
-    alert("로그아웃이 완료되었습니다.");
     return true;
   } catch(error: any) {
-    alert("로그아웃 중 오류가 발생했습니다.\n" + error.message);
+    console.log("로그아웃 중 오류가 발생했습니다.\n" + error.message);
     return false;
   }
 }

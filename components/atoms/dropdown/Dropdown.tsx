@@ -15,6 +15,7 @@ export const Dropdown = ({
   id,
   items,
   align,
+  itemAlign = 'end',
   onClickItemHandler,
   ...props
 }: DropdownProps) => {
@@ -57,7 +58,7 @@ export const Dropdown = ({
   `;
 
   return (
-    <BootstrapDropdown css={css(parentStyle)} {...props}>
+    <BootstrapDropdown css={css(parentStyle)} align={itemAlign} {...props}>
       <BootstrapDropdown.Toggle
         variant="primary"
         id={id}

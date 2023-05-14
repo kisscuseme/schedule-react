@@ -1,5 +1,3 @@
-import React from "react";
-
 interface TextOwnProps<E extends React.ElementType> {
   /**
    * 텍스트 타입

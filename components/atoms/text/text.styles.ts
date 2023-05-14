@@ -1,6 +1,7 @@
 export const defaultStyle = `
     display: inline-block;
     margin: auto;
+    text-decoration: none;
 `;
 
 export const sizeStyles = {

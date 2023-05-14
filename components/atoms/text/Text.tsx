@@ -10,25 +10,29 @@ export const Text = <E extends React.ElementType>({
   size = "large",
   children,
   as,
-  color,
-  align,
+  color = "#000000",
+  align = "none",
   ...props
 }: TextProps<E>) => {
   const Component = as || 'div';
-  const customStyle: string[] = [];
-
-  if(color) {
-    const colorStyle = `color: ${color}`;
-    customStyle.push(colorStyle);
-  }
+  const colorStyle = `color: ${color}`;
+  const centerStyle = align === "center" ? "width:100%;text-align:center;" : ("float: " + align);
+  const customStyle = [colorStyle, centerStyle];
 
   if(['h1','h2','h3','h4','h5','h6'].indexOf(as as string) < 0) {
     const sizeStyle = `${sizeStyles[size]}`;
     customStyle.push(sizeStyle);
   }
-
-  const centerStyle = align === "center" ? "width:100%;text-align:center;" : ("float: " + align);
-  customStyle.push(centerStyle);
+  
+  if(['a'].indexOf(as as string) > -1) {
+    const hoverStyle = `
+      cursor: pointer;
+      &:hover {
+        color: #6e6e6e;
+      }
+    `;
+    customStyle.push(hoverStyle);
+  }
 
   return (
     <Component

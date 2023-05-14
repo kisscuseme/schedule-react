@@ -1,4 +1,5 @@
 import { DropdownProps as BootstrapDropdownProps } from 'react-bootstrap';
+import { AlignType } from 'react-bootstrap/esm/types';
 
 interface DropdownOwnProps {
   /**
@@ -29,6 +30,10 @@ interface DropdownOwnProps {
    * Dropdown 위치
    */
   align?: "left" | "center" | "right" | "none";
+  /**
+   * Dropdown Item 위치
+   */
+  itemAlign?: AlignType;
   /**
    * Dropdown Click Item Handler
    */

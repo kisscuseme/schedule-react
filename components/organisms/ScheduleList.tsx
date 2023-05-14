@@ -1,72 +1,79 @@
 import { queryScheduleData } from "@/services/firebase/db";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { getYearList } from "@/services/util/util";
-import { selectedYearState, userInfoState } from "@/states/states";
+import { reloadDataState, scheduleAccordionActiveState, selectedYearState, userInfoState } from "@/states/states";
 import { css } from "@emotion/react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Col, Row, Spinner } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { AccordionChild } from "../molecules/accordion/AccordionChild";
+import { AccordionParent } from "../molecules/accordion/AccordionParent";
 import { Button } from "../atoms/button/Button";
 import { Text } from "../atoms/text/Text";
+import { useQuery } from "@tanstack/react-query";
+import { ScheduleChangeForm } from "./ScheduleChangeForm";
 
 export const ScheduleList = () => {
   const selectedYear = useRecoilValue<string>(selectedYearState);
   const userInfo = useRecoilValue<UserType>(userInfoState);
-  const [data, setData] = useState<ScheduleType[]>([]);
+  const [scheduledata, setScheduleData] = useState<ScheduleType[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [allowLoading, setAllowLoading] = useState<boolean>(true);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [nextLastVisible, setNextLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [noMoreData, setNoMoreData] = useState<boolean>(false);
-  const [newStart, setNewStart] = useState<boolean>(false);
+  const [reloadData, setReloadData] = useRecoilState(reloadDataState);
+  const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
 
   const getYearRange = () => {
     const yearList = getYearList();
-    const values = [];
+    let fromYear = selectedYear;
+    let toYear = selectedYear + "\uf8ff";
+    
     if(selectedYear === yearList[yearList.length-1].key) {
-      values.push("0000");
-      values.push(selectedYear + "\uf8ff");
+      fromYear = "0000";
     }
     else if(selectedYear === yearList[0].key) {
-      values.push(selectedYear);
-      values.push("9999" + "\uf8ff");
+      toYear = "9999" + "\uf8ff";
     }
-    else {
-      values.push(selectedYear);
-      values.push(selectedYear + "\uf8ff");
-    }
-    return values;
+    return {
+      fromYear: fromYear,
+      toYear: toYear
+    };
   }
 
-  const queryClickHandler = async () => {
-    if(allowLoading) {
-      setAllowLoading(false);
-      const result = await queryScheduleData({
-        fields: ["date", "date"],
-        operators: [">=", "<="],
-        values: getYearRange()
-      }, userInfo?.uid as string, lastVisible);
-      lastVisible && !noMoreData ? setData([...data, ...result.dataList]) : setData(result.dataList);
-      result.lastVisible ? setNextLastVisible(result.lastVisible) : setNoMoreData(true);
+  const getScheduleData = () => {
+    setAllowLoading(false);
+    const yearRange = getYearRange();
+    return queryScheduleData([
+      {
+        field: "date",
+        operator: ">=",
+        value: yearRange.fromYear
+      },
+      {
+        field: "date",
+        operator: "<=",
+        value: yearRange.toYear
+      }
+    ], userInfo?.uid as string, lastVisible);
+  }
+
+  const { isLoading, refetch } = useQuery(["loadSchedule"], getScheduleData, {
+    refetchOnWindowFocus: false,
+    retry: 0,
+    onSuccess: data => {
+      lastVisible && !noMoreData ? setScheduleData([...scheduledata, ...data.dataList]) : setScheduleData(data.dataList);
+      data.lastVisible ? setNextLastVisible(data.lastVisible) : setNoMoreData(true);
+      setAllowLoading(true);
+      setReloadData(false);
+    },
+    onError: (e: any) => {
+      console.log(e.message);
       setAllowLoading(true);
     }
-  }
-
-  useEffect(() => {
-    setNoMoreData(false);
-    setLastVisible(null);
-    setNewStart(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedYear]);
-
-  useEffect(() => {
-    if(newStart || lastVisible) {
-      setNewStart(false);
-      queryClickHandler();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newStart, lastVisible]);
+  });
 
   useEffect(() =>{
     let lastScrollY = 0;
@@ -81,9 +88,27 @@ export const ScheduleList = () => {
       // 현재의 스크롤 값을 저장
       lastScrollY = scrollY;
     });
-    queryClickHandler();
+    // queryClickHandler();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setReloadData(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedYear]);
+
+  useEffect(() => {
+    if(reloadData) {
+      setNoMoreData(false);
+      setLastVisible(null);
+      setScheduleData([]);
+    }
+    if(reloadData || lastVisible) {
+      // queryClickHandler();
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloadData, lastVisible]);
 
   const spinnerStyle = css`
     margin: auto;
@@ -91,62 +116,77 @@ export const ScheduleList = () => {
   `;
 
   return (
-    <div className="schedule-list">
-      <style>
-        {`
-          .schedule-list .row {
-            min-height: 30px;
-          }
-  
-          .schedule-list .col {
-            color: #5e5e5e;
-            margin: auto;
-          }
-
-          .schedule-list .col-5 {
-            color: #8e8e8e;
-            margin: auto;
-            max-width: 150px;
-          }
-        `}
-      </style>
-      {data.length > 0 ? (
-        data.map((item) => (
-          <Row key={item?.id}>
-            <Col xs={5}>
-              <Text>{item?.date}</Text>
-            </Col>
+    <>
+      <AccordionParent defaultActiveKey={scheduleAccordionActive}>
+        {scheduledata.length > 0 ? (
+          scheduledata.map((item) => (
+            <Row key={item?.id}>
+              <AccordionChild
+                dataId={item?.id as string}
+                headerContent={
+                  <>
+                    <Col xs={5}>
+                      <Row>
+                        <Text>{item?.date}</Text>
+                      </Row>
+                      {
+                        item?.toDate && item?.date !== item?.toDate && <>
+                          <Row>
+                            <Text>{"~"}</Text>
+                          </Row>
+                          <Row>
+                            <Text>{item?.toDate}</Text>
+                          </Row>
+                        </>
+                      }
+                    </Col>
+                    <Col>
+                      <Text>{item?.content}</Text>
+                    </Col>
+                  </>
+                }
+                bodyContent={
+                  <ScheduleChangeForm beforeSchedule={item}/>
+                }
+                headerClickHandler={() => {
+                  setScheduleAccordionActive(item?.id as string);
+                }}
+              />
+            </Row>
+          ))
+        ) : reloadData ? (
+          <Button align="center">
+            <Spinner animation="border" css={spinnerStyle} />
+          </Button>
+        ) : (
+          <Row>
             <Col>
-              <Text>{item?.content}</Text>
+              <Text align="center">조회된 항목이 없습니다.</Text>
             </Col>
           </Row>
-        ))
-      ) : (
-        <Row>
-          <Col>
-            <Text align="center">조회된 항목이 없습니다.</Text>
-          </Col>
-        </Row>
-      )}
+        )}
+      </AccordionParent>
       <Row>
         <Col>
-          {data.length > 0 && !noMoreData && ( allowLoading ? (
-            <Button
-              onClick={() => {
-                setLastVisible(nextLastVisible);
-              }}
-              align="center"
-              btnRef={buttonRef}
-            >
-              More...
-            </Button>
-          ) : (
-            <Button align="center">
-              <Spinner animation="border" css={spinnerStyle} />
-            </Button>
-          ))}
+          {scheduledata.length > 0 &&
+            !noMoreData &&
+            (allowLoading && !isLoading ? (
+              <Button
+                onClick={() => {
+                  setLastVisible(nextLastVisible);
+                }}
+                align="center"
+                btnRef={buttonRef}
+              >
+                Load More
+              </Button>
+            ) : (
+              <Button align="center">
+                <Spinner animation="border" css={spinnerStyle} />
+              </Button>
+            ))}
         </Col>
       </Row>
-    </div>
+    </>
   );
 }

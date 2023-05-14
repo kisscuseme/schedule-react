@@ -4,6 +4,7 @@ export type ScheduleType = {
     id: string
     date: string
     content: string
+    toDate?: string
 } | null;
 
 export type UserType = {
@@ -15,7 +16,7 @@ export type UserType = {
 export type LoginStateType = boolean | null;
 
 export type WhereConfigType = {
-    fields: string[],
-    operators: WhereFilterOp[],
-    values: any[]
+    field: string,
+    operator: WhereFilterOp,
+    value: any
   }

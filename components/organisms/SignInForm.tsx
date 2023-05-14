@@ -8,10 +8,11 @@ import { checkEmail } from "@/services/util/util";
 import { Text } from "../atoms/text/Text";
 import { firebaseAuth } from "@/services/firebase/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { UserType } from "@/services/firebase/firebase.type";
-import { userInfoState } from "@/states/states";
+import { showModalState, userInfoState } from "@/states/states";
 import { signIn } from "@/services/firebase/auth";
+import { useMutation } from "@tanstack/react-query";
 
 export const SignInForm = () => {
   const groupBtnStyle = css`
@@ -23,31 +24,52 @@ export const SignInForm = () => {
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
+  const setShowModal = useSetRecoilState(showModalState);
 
   const router = useRouter();
 
-  const signInClickHandler = async () => {
-    if(!checkEmail(email)) {
+  const signInWithEmail = (loginInfo: {email: string, password: string}) => {
+    return signIn(loginInfo.email, loginInfo.password);
+  }
+
+  const signInMutation = useMutation(signInWithEmail, {
+    onMutate: variable => {
+      // console.log("onMutate", variable);
+    },
+    onError: (error, variable, context) => {
+      // error
+    },
+    onSuccess: (data, variables, context) => {
+      if(typeof data !== 'string') {
+        if(userInfo === null) {
+          setUserInfo({
+            uid: data.user.uid,
+            name: data.user.displayName as string,
+            email: data.user.email as string
+          });
+        }
+        router.reload();
+      } else {
+        setErrorMsg(data);
+      }
+    },
+    onSettled: () => {
+      // console.log("end");
+    }
+  });
+
+  const signInHandleSubmit = () => {
+    if(email === "") {
+      setErrorMsg("이메일을 입력해 주세요.");
+    } else if(!checkEmail(email)) {
       setErrorMsg("이메일 형식을 확인해 주세요.");
     } else if(password === "") {
       setErrorMsg("패스워드를 입력해 주세요.");
     } else {
       setErrorMsg("");
-      const result = await signIn(email, password);
-      if(typeof result !== 'string') {
-        if(userInfo === null) {
-          setUserInfo({
-            uid: result.user.uid,
-            name: result.user.displayName as string,
-            email: result.user.email as string
-          });
-        }
-        router.replace('/schedule');
-      } else {
-        setErrorMsg(result);
-      }
+      signInMutation.mutate({ email: email, password });
     }
-  }
+  };
 
   const resetPassword = async () => {
     try {
@@ -57,17 +79,40 @@ export const SignInForm = () => {
     }
   }
 
+  const resetPasswordMutation = useMutation(resetPassword, {
+    onMutate: variable => {
+      // console.log("onMutate", variable);
+    },
+    onError: (error, variable, context) => {
+      // error
+    },
+    onSuccess: (data, variables, context) => {
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: "메일 발송을 완료하였습니다."
+      });
+    },
+    onSettled: () => {
+      // console.log("end");
+    }
+  });
+
   const resetPasswordClickHandler = () => {
-    if (!checkEmail(email)) {
+    if(email === "") {
+      setErrorMsg("이메일을 입력해 주세요.");
+    } else if (!checkEmail(email)) {
       setErrorMsg("이메일 형식을 확인해 주세요.");
     } else {
       try {
-        const result = confirm(
-          email + "으로 비밀번호 초기화 메일을 발송 하시겠습니까?"
-        );
-        if (result) {
-          resetPassword();
-        }
+        setShowModal({
+          show: true,
+          title: "알림",
+          content: email + "으로 비밀번호 초기화 메일을 발송 하시겠습니까?",
+          confirm: () => {
+            resetPasswordMutation.mutate();
+          }
+        });
       } catch (error) {
         console.log(error);
       }
@@ -88,7 +133,7 @@ export const SignInForm = () => {
 
   const enterKeyUpEventHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if(e.key === "Enter") {
-      signInClickHandler();
+      signInHandleSubmit();
     }
   }
 
@@ -129,7 +174,7 @@ export const SignInForm = () => {
       </Row>
       <Row>
         <Col>
-          <Button align="right" primary onClick={signInClickHandler}>
+          <Button align="right" primary onClick={signInHandleSubmit}>
             Sign In
           </Button>
         </Col>

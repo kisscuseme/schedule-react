@@ -3,15 +3,73 @@ import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { css } from "@emotion/react";
 import { ChangeEvent, useState } from "react";
-import { getToday } from "@/services/util/util";
+import { getReformDate, getToday } from "@/services/util/util";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { reloadDataState, showModalState, userInfoState } from "@/states/states";
+import { useMutation } from "@tanstack/react-query";
+import { insertScheduleData } from "@/services/firebase/db";
+import { UserType } from "@/services/firebase/firebase.type";
 
 export const ScheduleInputForm = () => {
   const [fromDate, setFromdate] = useState(getToday());
   const [toDate, setTodate] = useState(getToday());
   const [schedule, setSchedule] = useState("");
+  const [showModal, setShowModal] = useRecoilState(showModalState);
+  const setReloadData = useSetRecoilState(reloadDataState);
+  const userInfo = useRecoilValue<UserType>(userInfoState);
 
-  const addScheduleClickHandler = () => {
-    alert("일정 등록 구현 예정");
+  const insertScheduleMutation = useMutation(insertScheduleData, {
+    onMutate: variable => {
+      // console.log("onMutate", variable);
+    },
+    onError: (error, variable, context) => {
+      // error
+    },
+    onSuccess: (data, variables, context) => {
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: "입력이 완료되었습니다.",
+        callback: () => {
+          setReloadData(true);
+        }
+      });
+    },
+    onSettled: () => {
+      // console.log("end");
+    }
+  });
+
+  const changeSchedule = () => {
+    if(schedule === "") {
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: "내용을 입력하세요."
+      });  
+    } else if(fromDate === "" || toDate === "") {
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: "날짜를 입력하세요."
+      });
+    } else {
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: "입력하시겠습니까?",
+        confirm: () => {
+          insertScheduleMutation.mutate({
+            uid: userInfo?.uid as string,
+            newSchedule: {
+              content: schedule,
+              date: getReformDate(fromDate, "."),
+              toDate: getReformDate(toDate, ".")
+            }
+          });
+        }
+      });
+    }
   }
 
   const selectFromDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,10 +138,11 @@ export const ScheduleInputForm = () => {
         <Col>
           <Button
             align="right"
-            primary
-            onClick={addScheduleClickHandler}
+            backgroundColor="#92bdff"
+            color="#fefefe"
+            onClick={changeSchedule}
           >
-            Add Schedule
+            Add
           </Button>
         </Col>
       </Row>
