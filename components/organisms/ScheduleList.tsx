@@ -126,19 +126,19 @@ export const ScheduleList = () => {
                 headerContent={
                   <>
                     <Col xs={5}>
-                      <Row>
-                        <Text>{item?.date}</Text>
-                      </Row>
                       {
                         item?.toDate && item?.date !== item?.toDate && <>
                           <Row>
-                            <Text>{"~"}</Text>
+                            <Text>{item?.toDate}</Text>
                           </Row>
                           <Row>
-                            <Text>{item?.toDate}</Text>
+                            <Text>{"~"}</Text>
                           </Row>
                         </>
                       }
+                      <Row>
+                        <Text>{item?.date}</Text>
+                      </Row>
                     </Col>
                     <Col>
                       <Text>{item?.content}</Text>
