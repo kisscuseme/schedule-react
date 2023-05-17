@@ -4,11 +4,11 @@ interface AlertOwnProps {
   /**
    * title
    */
-  title: string;
+  title?: string;
   /**
    * content
    */
-  content: React.ReactNode;
+  content?: React.ReactNode;
   /**
    * callback
    */

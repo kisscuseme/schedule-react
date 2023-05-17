@@ -1,5 +1,5 @@
 import { Container } from "@/components/atoms/container/Container";
-import { ScheduleInputForm } from "@/components/organisms/ScheduleInputForm";
+import { ScheduleAddForm } from "@/components/organisms/ScheduleAddForm";
 import { ScheduleList } from "@/components/organisms/ScheduleList";
 import { ScheduleTopBar } from "@/components/organisms/ScheduleTopBar";
 import { css } from "@emotion/react";
@@ -13,7 +13,7 @@ export default function Schedule() {
   return (
     <Container>
       <ScheduleTopBar/>
-      <ScheduleInputForm/>
+      <ScheduleAddForm/>
       <div css={css(divideStyle)}></div>
       <ScheduleList/>
     </Container>

@@ -12,7 +12,7 @@ export default function Home() {
   const showModal = useRecoilValue(showModalState);
 
   firebaseAuth.onAuthStateChanged((user) => {
-    if (user) {
+    if (user && user.emailVerified) {
       if (!userInfo) setUserInfo({
           uid: user.uid,
           name: user.displayName as string,

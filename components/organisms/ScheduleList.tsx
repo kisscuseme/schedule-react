@@ -105,6 +105,7 @@ export const ScheduleList = () => {
     }
     if(reloadData || lastVisible) {
       // queryClickHandler();
+      setScheduleAccordionActive("");
       refetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -12,12 +12,16 @@ const getDay = (date: string) => {
 
 
 const getReformDate = (date: string, dvsn: string) => {
-  let reformDate = date.replace("년", dvsn).replace("월",dvsn).replace("일"," ");
-  reformDate = reformDate.replaceAll(".", dvsn);
-  reformDate = reformDate.replaceAll("-", dvsn);
-  if(dvsn === '-') reformDate = reformDate.substring(0, 10);
-  if(dvsn === '.') reformDate = `${reformDate.substring(0, 10)} (${getDay(date)})`;
-  return reformDate;
+  if(date) {
+    let reformDate = date.replace("년", dvsn).replace("월",dvsn).replace("일"," ");
+    reformDate = reformDate.replaceAll(".", dvsn);
+    reformDate = reformDate.replaceAll("-", dvsn);
+    if(dvsn === '-') reformDate = reformDate.substring(0, 10);
+    if(dvsn === '.') reformDate = `${reformDate.substring(0, 10)} (${getDay(date)})`;
+    return reformDate;
+  } else {
+    return ""
+  }
 }
 
 const getToday = () => {

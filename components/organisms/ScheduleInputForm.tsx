@@ -1,90 +1,55 @@
 import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
-import { Button } from "../atoms/button/Button";
 import { css } from "@emotion/react";
-import { ChangeEvent, useState } from "react";
-import { getReformDate, getToday } from "@/services/util/util";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { reloadDataState, showModalState, userInfoState } from "@/states/states";
-import { useMutation } from "@tanstack/react-query";
-import { insertScheduleData } from "@/services/firebase/db";
-import { UserType } from "@/services/firebase/firebase.type";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { ScheduleInputType } from "@/types/global.types";
 
-export const ScheduleInputForm = () => {
-  const [fromDate, setFromdate] = useState(getToday());
-  const [toDate, setTodate] = useState(getToday());
-  const [schedule, setSchedule] = useState("");
-  const [showModal, setShowModal] = useRecoilState(showModalState);
-  const setReloadData = useSetRecoilState(reloadDataState);
-  const userInfo = useRecoilValue<UserType>(userInfoState);
-
-  const insertScheduleMutation = useMutation(insertScheduleData, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
-      setShowModal({
-        show: true,
-        title: "알림",
-        content: "입력이 완료되었습니다.",
-        callback: () => {
-          setReloadData(true);
-        }
-      });
-    },
-    onSettled: () => {
-      // console.log("end");
-    }
-  });
-
-  const changeSchedule = () => {
-    if(schedule === "") {
-      setShowModal({
-        show: true,
-        title: "알림",
-        content: "내용을 입력하세요."
-      });  
-    } else if(fromDate === "" || toDate === "") {
-      setShowModal({
-        show: true,
-        title: "알림",
-        content: "날짜를 입력하세요."
-      });
-    } else {
-      setShowModal({
-        show: true,
-        title: "알림",
-        content: "입력하시겠습니까?",
-        confirm: () => {
-          insertScheduleMutation.mutate({
-            uid: userInfo?.uid as string,
-            newSchedule: {
-              content: schedule,
-              date: getReformDate(fromDate, "."),
-              toDate: getReformDate(toDate, ".")
-            }
-          });
-        }
-      });
-    }
-  }
-
+export const ScheduleInputForm = ({
+  scheduleInput,
+  setScheduleInput,
+  scheduleInputPlaceholder
+}: {
+  scheduleInput: ScheduleInputType,
+  setScheduleInput: Dispatch<SetStateAction<ScheduleInputType>>,
+  scheduleInputPlaceholder?: string
+}) => {
+  const scheduleClearButtonRef = useRef<HTMLButtonElement>(null);
   const selectFromDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if(toDate < e.currentTarget.value) setTodate(e.currentTarget.value);
-    setFromdate(e.currentTarget.value);
+    if(scheduleInput.toDate < e.currentTarget.value) setScheduleInput({
+      ...scheduleInput,
+      fromDate: e.currentTarget.value,
+      toDate: e.currentTarget.value
+    });
+    else setScheduleInput({
+      ...scheduleInput,
+      fromDate: e.currentTarget.value
+    });
   }
 
   const selectToDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if(fromDate > e.currentTarget.value) setFromdate(e.currentTarget.value);
-    setTodate(e.currentTarget.value);
+    if(scheduleInput.fromDate > e.currentTarget.value) setScheduleInput({
+      ...scheduleInput,
+      fromDate: e.currentTarget.value,
+      toDate: e.currentTarget.value
+    });
+    else setScheduleInput({
+      ...scheduleInput,
+      toDate: e.currentTarget.value
+    });
   }
 
   const scheduleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSchedule(e.currentTarget.value);
+    setScheduleInput({
+      ...scheduleInput,
+      schedule: e.currentTarget.value
+    });
   }
+
+  useEffect(() => {
+    if(scheduleInput.schedule === "") {
+      scheduleClearButtonRef.current?.click();
+    }
+  }, [scheduleInput]);
 
   const dateMiddleStyle = `
     max-width: 30px;
@@ -108,7 +73,7 @@ export const ScheduleInputForm = () => {
         <Col>
           <Input
             type="date"
-            value={fromDate}
+            value={scheduleInput.fromDate}
             onChange={selectFromDateHandler}
           />
         </Col>
@@ -118,7 +83,7 @@ export const ScheduleInputForm = () => {
         <Col>
           <Input
             type="date"
-            value={toDate}
+            value={scheduleInput.toDate}
             onChange={selectToDateHandler}
           />
         </Col>
@@ -126,24 +91,19 @@ export const ScheduleInputForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Enter your schedule"
+            placeholder={scheduleInputPlaceholder}
             type="text"
-            value={schedule}
+            value={scheduleInput.schedule}
             onChange={scheduleChangeHandler}
-            clearButton={setSchedule}
+            clearButton={true}
+            clearBtnRef={scheduleClearButtonRef}
+            onClearButtonClick={() => {
+              setScheduleInput({
+                ...scheduleInput,
+                schedule: ""
+              });
+            }}
           />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button
-            align="right"
-            backgroundColor="#92bdff"
-            color="#fefefe"
-            onClick={changeSchedule}
-          >
-            Add
-          </Button>
         </Col>
       </Row>
     </div>

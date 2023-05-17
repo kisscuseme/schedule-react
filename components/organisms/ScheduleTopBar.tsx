@@ -62,22 +62,26 @@ export const ScheduleTopBar = () => {
     },
     onSuccess: (data, variables, context) => {
       if(data) {
-        setShowModal({
-          title: "알림",
-          content: "로그아웃이 완료되었습니다.",
-          show: true,
-          callback: () => {
-            setUserInfo(null);
-            setIsLogedIn(null);
-            router.replace("/");
-          }
-        });
+        setUserInfo(null);
+        setIsLogedIn(null);
+        router.replace("/");
       }
     },
     onSettled: () => {
       // console.log("end");
     }
   });
+
+  const signOutHandler = () => {
+    setShowModal({
+      title: "알림",
+      content: "정말 로그아웃 하시겠습니까?",
+      show: true,
+      confirm: () => {
+        signOutMutation.mutate();
+      }
+    });
+  }
 
   return (
     <Row css={topRowStyle}>
@@ -102,7 +106,7 @@ export const ScheduleTopBar = () => {
                 <Nav.Item>Name: {userInfo?.name}</Nav.Item>
                 <Nav.Item>
                   <Nav.Link
-                    onClick={() => signOutMutation.mutate()}
+                    onClick={() => signOutHandler()}
                     css={signOutButtonStyle}
                   >
                     Sign Out

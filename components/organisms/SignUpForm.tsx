@@ -7,6 +7,9 @@ import { useRouter } from "next/router";
 import { Text } from "../atoms/text/Text";
 import { signUp } from "@/services/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
+import { useSetRecoilState } from "recoil";
+import { showModalState } from "@/states/states";
+import { sendEmailVerification, updateProfile, UserCredential } from "firebase/auth";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +17,7 @@ export const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [reconfirmPassword, setReconfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const setShowModal = useSetRecoilState(showModalState);
   const router = useRouter();
 
   const emailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,14 +47,28 @@ export const SignUpForm = () => {
     onError: (error, variable, context) => {
       // error
     },
-    onSuccess: (data, variables, context) => {
-      if(typeof data !== 'string') {
-        setEmail("");
-        setPassword("");
-        alert("회원 가입을 축하합니다.");
-        router.replace('/');
-      } else {
-        setErrorMsg(data);
+    onSuccess: async (data: UserCredential | string, variables, context) => {
+      try {
+        if(typeof data === "string") {
+          setErrorMsg(data);
+        } else {
+          await updateProfile(data.user, {displayName: name});
+          await sendEmailVerification(data.user);
+          setShowModal({
+            show: true,
+            title: "알림",
+            content: "거의 완료되었습니다. 발송된 인증 메일을 확인해 주세요.",
+            callback: () => {
+              setName("");
+              setEmail("");
+              setPassword("");
+              setReconfirmPassword("");
+              router.replace("/");
+            }
+          });
+        }
+      } catch(error: any) {
+        console.log(error);
       }
     },
     onSettled: () => {
@@ -71,7 +89,14 @@ export const SignUpForm = () => {
       setErrorMsg("입력한 비밀번호가 동일하지 않습니다.");
     } else {
       setErrorMsg("");
-      signUpMutation.mutate({ email: email, password });
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: "회원 가입을 하시겠습니까?",
+        confirm: () => {
+          signUpMutation.mutate({ email: email, password });
+        }
+      });
     }
   };
 
@@ -100,7 +125,7 @@ export const SignUpForm = () => {
             placeholder="Email"
             type="email"
             onChange={emailChangeHandler}
-            clearButton={setEmail}
+            clearButton={true}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
@@ -110,8 +135,9 @@ export const SignUpForm = () => {
           <Input
             placeholder="Name"
             type="text"
+            value={name}
             onChange={nameChangeHandler}
-            clearButton={setName}
+            clearButton={true}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
@@ -121,8 +147,9 @@ export const SignUpForm = () => {
           <Input
             placeholder="Password"
             type="password"
+            value={password}
             onChange={passwordChangeHandler}
-            clearButton={setPassword}
+            clearButton={true}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
@@ -132,8 +159,9 @@ export const SignUpForm = () => {
           <Input
             placeholder="Reconfirm Password"
             type="password"
+            value={reconfirmPassword}
             onChange={reconfirmPasswordChangeHandler}
-            clearButton={setReconfirmPassword}
+            clearButton={true}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>

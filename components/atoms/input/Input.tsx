@@ -15,10 +15,13 @@ export const Input = ({
   placeholder = "",
   clearButton,
   onChange,
+  ref,
+  clearBtnRef,
+  onClearButtonClick,
   ...props
 }: InputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = useState("");
+  const [text, setText] = useState("");
+
   const customStyle = `
     color: ${color};
     &::placeholder {
@@ -38,24 +41,23 @@ export const Input = ({
         type={type}
         css={css([defaultStyle, customStyle])}
         placeholder={placeholder}
-        ref={inputRef}
+        ref={ref}
         onChange={(e) => {
-          setValue(e.currentTarget.value);
-          if (onChange) onChange(e);
+          setText(e.currentTarget.value);
+          if(onChange) onChange(e);
         }}
+        value = {text}
         {...props}
       />
-      {clearButton && type !== "date" && value != "" && (
+      {clearButton && type !== "date" && text !== "" && (
         <button
-          onClick={() => {
-            if (inputRef.current) {
-              inputRef.current.value = "";
-              setValue("");
-              clearButton("");
-            }
-          }}
           css={css([innerBtnStyle])}
           tabIndex={-1}
+          ref={clearBtnRef}
+          onClick={() => {
+            setText("");
+            if(onClearButtonClick) onClearButtonClick();
+          }}
         >
           X
         </button>

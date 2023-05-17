@@ -1,7 +1,6 @@
 import { Col, Row, useAccordionButton } from "react-bootstrap";
-import { Input } from "../atoms/input/Input";
 import { css } from "@emotion/react";
-import { ChangeEvent, EventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
+import { EventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { Button } from "../atoms/button/Button";
 import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
@@ -9,6 +8,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { reloadDataState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
 import { getReformDate } from "@/services/util/util";
 import { useMutation } from "@tanstack/react-query";
+import { ScheduleInputForm } from "./ScheduleInputForm";
+import { ScheduleInputType } from "@/types/global.types";
 
 interface ScheduleChangeFromProps {
   beforeSchedule: ScheduleType
@@ -17,9 +18,14 @@ interface ScheduleChangeFromProps {
 export const ScheduleChangeForm = ({
   beforeSchedule
 }: ScheduleChangeFromProps) => {
-  const [fromDate, setFromdate] = useState(beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string);
-  const [toDate, setTodate] = useState(beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string);
+  const [fromDate, setFromDate] = useState(beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string);
+  const [toDate, setToDate] = useState(beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string);
   const [schedule, setSchedule] = useState(beforeSchedule?.content as string);
+  const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
+    fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
+    toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
+    schedule: beforeSchedule?.content as string
+  });
   const userInfo = useRecoilValue<UserType>(userInfoState);
   const setShowModal = useSetRecoilState(showModalState);
   const [reloadData, setReloadData] = useRecoilState(reloadDataState);
@@ -35,23 +41,9 @@ export const ScheduleChangeForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadData]);
   
-  const selectFromDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if(toDate < e.currentTarget.value) setFromdate(toDate);
-    else setFromdate(e.currentTarget.value);
-  }
-
-  const selectToDateHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if(fromDate > e.currentTarget.value) setTodate(fromDate);
-    else setTodate(e.currentTarget.value);
-  }
-
-  const scheduleInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSchedule(e.currentTarget.value);
-  }
-
   const resetChange = () => {
-    setFromdate(beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string);
-    setTodate(beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string);
+    setFromDate(beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string);
+    setToDate(beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string);
     setSchedule(beforeSchedule?.content as string);
   }
 
@@ -63,15 +55,8 @@ export const ScheduleChangeForm = ({
       // error
     },
     onSuccess: (data, variables, context) => {
-      setShowModal({
-        show: true,
-        title: "알림",
-        content: "수정이 완료되었습니다.",
-        callback: () => {
-          setScheduleAccordionActive("");
-          setReloadData(true);
-        }
-      });
+      setScheduleAccordionActive("");
+      setReloadData(true);
     },
     onSettled: () => {
       // console.log("end");
@@ -101,9 +86,9 @@ export const ScheduleChangeForm = ({
             uid: userInfo?.uid as string,
             scheduleId: beforeSchedule?.id as string,
             newSchedule: {
-              content: schedule,
-              date: getReformDate(fromDate, "."),
-              toDate: getReformDate(toDate, ".")
+              content: scheduleInput.schedule,
+              date: getReformDate(scheduleInput.fromDate, "."),
+              toDate: getReformDate(scheduleInput.toDate, ".")
             }
           });
           eventHandler(event);
@@ -120,15 +105,8 @@ export const ScheduleChangeForm = ({
       // error
     },
     onSuccess: (data, variables, context) => {
-      setShowModal({
-        show: true,
-        title: "알림",
-        content: "삭제가 완료되었습니다.",
-        callback: () => {
-          setScheduleAccordionActive("");
-          setReloadData(true);
-        }
-      });
+      setScheduleAccordionActive("");
+      setReloadData(true);
     },
     onSettled: () => {
       // console.log("end");
@@ -150,48 +128,12 @@ export const ScheduleChangeForm = ({
     });
   }
 
-  const dateMiddleStyle = `
-    max-width: 30px;
-    margin-left: -3px !important;
-  `;
-
   return (
-    <div className="schedule-input-form">
-      <style>
-        {`
-          .schedule-input-form .row {
-            min-height: 50px;
-          }
-  
-          .schedule-input-form .col {
-            margin: auto;
-          }
-        `}
-      </style>
-      <Row>
-        <Col>
-          <Input
-            type="date"
-            value={fromDate}
-            onChange={selectFromDateHandler}
-          />
-        </Col>
-        <Col css={css(dateMiddleStyle)}>~</Col>
-        <Col>
-          <Input type="date" value={toDate} onChange={selectToDateHandler} />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Input
-            placeholder=""
-            type="text"
-            value={schedule}
-            onChange={scheduleInputHandler}
-            clearButton={setSchedule}
-          />
-        </Col>
-      </Row>
+    <>
+      <ScheduleInputForm
+        scheduleInput={scheduleInput}
+        setScheduleInput={setScheduleInput}
+      />
       <Row>
         <Col>
           <Button
@@ -231,15 +173,16 @@ export const ScheduleChangeForm = ({
           </Button>
         </Col>
       </Row>
-      <Button
-        btnRef={closeAccordionButtonRef}
-        onClick={(e) => {
-          closeAccordion(e);
-        }}
-        css={css(`display: none;`)}
-      >
-        close accordion
-      </Button>
-    </div>
+      <div className="hidden-button">
+        <Button
+          btnRef={closeAccordionButtonRef}
+          onClick={(e) => {
+            closeAccordion(e);
+          }}
+        >
+          close accordion
+        </Button>
+      </div>
+    </>
   );
 }

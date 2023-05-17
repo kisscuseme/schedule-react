@@ -7,7 +7,7 @@ import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { checkEmail } from "@/services/util/util";
 import { Text } from "../atoms/text/Text";
 import { firebaseAuth } from "@/services/firebase/firebase";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { UserType } from "@/services/firebase/firebase.type";
 import { showModalState, userInfoState } from "@/states/states";
@@ -41,14 +41,34 @@ export const SignInForm = () => {
     },
     onSuccess: (data, variables, context) => {
       if(typeof data !== 'string') {
-        if(userInfo === null) {
-          setUserInfo({
-            uid: data.user.uid,
-            name: data.user.displayName as string,
-            email: data.user.email as string
+        if(data.user.emailVerified) {
+          if(userInfo === null) {
+            setUserInfo({
+              uid: data.user.uid,
+              name: data.user.displayName as string,
+              email: data.user.email as string
+            });
+          }
+          router.reload();
+        } else {
+          setShowModal({
+            show: true,
+            title: "알림",
+            content: "이메일 인증이 완료되지 않았습니다. 인증 메일을 재발송 하시겠습니까?",
+            confirm: async () => {
+              setShowModal({
+                show: false
+              });
+              await sendEmailVerification(data.user);
+              setPassword("");
+              setShowModal({
+                show: true,
+                title: "알림",
+                content: "인증 메일 재발송이 완료되었습니다."
+              });
+            }
           });
         }
-        router.reload();
       } else {
         setErrorMsg(data);
       }
@@ -155,8 +175,9 @@ export const SignInForm = () => {
           <Input
             placeholder="Email"
             type="email"
+            value={email}
             onChange={emailChangeHandler}
-            clearButton={setEmail}
+            clearButton={true}
             onKeyUp={(enterKeyUpEventHandler)}
           />
         </Col>
@@ -166,8 +187,9 @@ export const SignInForm = () => {
           <Input
             placeholder="Password"
             type="password"
+            value={password}
             onChange={passwordChangeHandler}
-            clearButton={setPassword}
+            clearButton={true}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>

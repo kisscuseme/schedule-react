@@ -7,14 +7,20 @@ import { AlertProps } from "./alert.props";
 import { defaultStyle, titleStyle } from "./alert.styles";
 
 export const Alert = ({
+  show,
   title,
   content,
   callback,
-  show,
   confirm,
   ...props
 }: AlertProps) => {
   const setShowModal = useSetRecoilState(showModalState);
+  if(!show) {
+    title = "";
+    content = "";
+    callback = undefined;
+    confirm = undefined;
+  }
   return (
     <Modal
       {...props}
@@ -37,13 +43,15 @@ export const Alert = ({
           backgroundColor="#8e8e8e"
           color="#ffffff"
           onClick={() => {
+            if(confirm) confirm();
             setShowModal({
               title: "",
               content: "",
               callback: undefined,
+              confirm: undefined,
               show: false
             });
-            confirm();
+            
           }}
         >
           Confirm
@@ -51,13 +59,15 @@ export const Alert = ({
         <Button
           primary
           onClick={() => {
+            if(callback) callback();
             setShowModal({
               title: "",
               content: "",
               callback: undefined,
+              confirm: undefined,
               show: false
             });
-            if(callback) callback();
+            
           }}
         >
           Close

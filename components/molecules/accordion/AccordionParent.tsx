@@ -12,7 +12,7 @@ export function AccordionParent({
   return (
     <>
       <style>{defaultStyle}</style>
-      <BootstrapAccordion {...props}>
+      <BootstrapAccordion defaultActiveKey={null} {...props}>
         {children}
       </BootstrapAccordion>
     </>
