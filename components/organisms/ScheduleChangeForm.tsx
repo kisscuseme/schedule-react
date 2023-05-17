@@ -1,5 +1,4 @@
 import { Col, Row, useAccordionButton } from "react-bootstrap";
-import { css } from "@emotion/react";
 import { EventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { Button } from "../atoms/button/Button";
@@ -18,9 +17,6 @@ interface ScheduleChangeFromProps {
 export const ScheduleChangeForm = ({
   beforeSchedule
 }: ScheduleChangeFromProps) => {
-  const [fromDate, setFromDate] = useState(beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string);
-  const [toDate, setToDate] = useState(beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string);
-  const [schedule, setSchedule] = useState(beforeSchedule?.content as string);
   const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
     fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
     toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
@@ -42,9 +38,11 @@ export const ScheduleChangeForm = ({
   }, [reloadData]);
   
   const resetChange = () => {
-    setFromDate(beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string);
-    setToDate(beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string);
-    setSchedule(beforeSchedule?.content as string);
+    setScheduleInput({
+      fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
+      toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
+      schedule: beforeSchedule?.content as string
+    });
   }
 
   const changeScheduleMutation = useMutation(updateScheduleData, {
@@ -64,13 +62,13 @@ export const ScheduleChangeForm = ({
   });
 
   const changeSchedule = (event: SyntheticEvent<any, Event>, eventHandler: EventHandler<SyntheticEvent<any, Event>>) => {
-    if(schedule === "") {
+    if(scheduleInput.schedule === "") {
       setShowModal({
         show: true,
         title: "알림",
         content: "내용을 입력하세요."
       });  
-    } else if(fromDate === "" || toDate === "") {
+    } else if(scheduleInput.fromDate === "" || scheduleInput.toDate === "") {
       setShowModal({
         show: true,
         title: "알림",
