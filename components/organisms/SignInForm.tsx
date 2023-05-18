@@ -4,7 +4,7 @@ import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { useRouter } from "next/router";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import { checkEmail } from "@/services/util/util";
+import { checkEmail, s } from "@/services/util/util";
 import { Text } from "../atoms/text/Text";
 import { firebaseAuth } from "@/services/firebase/firebase";
 import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
@@ -13,6 +13,7 @@ import { UserType } from "@/services/firebase/firebase.type";
 import { showModalState, userInfoState } from "@/states/states";
 import { signIn } from "@/services/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
+import { t } from "i18next";
 
 export const SignInForm = () => {
   const groupBtnStyle = css`
@@ -59,8 +60,8 @@ export const SignInForm = () => {
         } else {
           setShowModal({
             show: true,
-            title: "알림",
-            content: "이메일 인증이 완료되지 않았습니다. 인증 메일을 재발송 하시겠습니까?",
+            title: s(t("Check")),
+            content: `${s(t("E-mail verification has not been completed."))} ${s(t("Would you like to resend the verification e-mail?"))}`,
             confirm: async () => {
               setShowModal({
                 show: false
@@ -70,20 +71,20 @@ export const SignInForm = () => {
                 setPassword("");
                 setShowModal({
                   show: true,
-                  title: "알림",
-                  content: "인증 메일 재발송이 완료되었습니다."
+                  title: s(t("Check")),
+                  content: s(t("Resending of verification e-mail has been completed."))
                 });
               } catch(error: any) {
                 let message;
                 if(error.code === "auth/too-many-requests" ) {
-                  message = "시도 횟수가 많습니다. 조금 후에 다시 시도해 주세요.";
+                  message = `${s(t("Lots of attempts."))} ${s(t("Please try again later."))}`;
                 } else {
                   message = error.message;
                 }
 
                 setShowModal({
                   show: true,
-                  title: "알림",
+                  title: s(t("Check")),
                   content: message
                 });
               }
@@ -98,11 +99,11 @@ export const SignInForm = () => {
 
   const signInHandleSubmit = () => {
     if(email === "") {
-      setErrorMsg("이메일을 입력해 주세요.");
+      setErrorMsg(s(t("Please enter your e-mail.")));
     } else if(!checkEmail(email)) {
-      setErrorMsg("이메일 형식을 확인해 주세요.");
+      setErrorMsg(s(t("Please check your email format.")));
     } else if(password === "") {
-      setErrorMsg("패스워드를 입력해 주세요.");
+      setErrorMsg(s(t("Please enter your password.")));
     } else {
       setErrorMsg("");
       signInMutation.mutate({ email: email, password });
@@ -113,7 +114,7 @@ export const SignInForm = () => {
     try {
       return await sendPasswordResetEmail(firebaseAuth, email);
     } catch (error: any) {
-      setErrorMsg("메일 전송 중 에러가 발생하였습니다.\n" + error.message);
+      setErrorMsg(`${s(t("An error occurred while sending e-mail."))}\n` + error.message);
     }
   }
 
@@ -121,37 +122,37 @@ export const SignInForm = () => {
     onError: (error: any) => {
       let message;
       if(error.code === "auth/too-many-requests" ) {
-        message = "시도 횟수가 많습니다. 조금 후에 다시 시도해 주세요.";
+        message = `${s(t("Lots of attempts."))} ${s(t("Please try again later."))}`;
 
       } else {
         message = error.message;
       }
       setShowModal({
         show: true,
-        title: "알림",
+        title: s(t("Check")),
         content: message
       });
     },
     onSuccess: () => {
       setShowModal({
         show: true,
-        title: "알림",
-        content: "메일 발송을 완료하였습니다."
+        title: s(t("Check")),
+        content: s(t("E-mail sending has been completed."))
       });
     },
   });
 
   const resetPasswordClickHandler = () => {
     if(email === "") {
-      setErrorMsg("이메일을 입력해 주세요.");
+      setErrorMsg(s(t("Please enter your e-mail.")));
     } else if (!checkEmail(email)) {
-      setErrorMsg("이메일 형식을 확인해 주세요.");
+      setErrorMsg(s(t("Please check your email format.")));
     } else {
       try {
         setShowModal({
           show: true,
-          title: "알림",
-          content: email + "으로 비밀번호 초기화 메일을 발송 하시겠습니까?",
+          title: s(t("Check")),
+          content: s(t("Would you like to send a password reset e-mail to ?", {email: email})),
           confirm: () => {
             resetPasswordMutation.mutate();
           }
@@ -196,7 +197,7 @@ export const SignInForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Email"
+            placeholder={s(t("E-mail"))}
             type="email"
             value={email}
             onChange={emailChangeHandler}
@@ -212,7 +213,7 @@ export const SignInForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Password"
+            placeholder={s(t("Password"))}
             type="password"
             value={password}
             onChange={passwordChangeHandler}
@@ -228,15 +229,15 @@ export const SignInForm = () => {
       <Row>
         <Col>
           <Button align="right" primary onClick={signInHandleSubmit}>
-            Sign In
+            {s(t("Sign In"))}
           </Button>
         </Col>
       </Row>
       <Row>
         <Col>
           <div css={groupBtnStyle}>
-            <Button onClick={resetPasswordClickHandler}>Reset Password</Button>
-            <Button onClick={signUpClickHandler}>Sign Up</Button>
+            <Button onClick={resetPasswordClickHandler}>{s(t("Reset Password"))}</Button>
+            <Button onClick={signUpClickHandler}>{s(t("Sign Up"))}</Button>
           </div>
         </Col>
       </Row>

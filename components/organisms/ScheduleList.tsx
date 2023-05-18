@@ -1,6 +1,6 @@
 import { queryScheduleData } from "@/services/firebase/db";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
-import { getYearList } from "@/services/util/util";
+import { getYearList, s } from "@/services/util/util";
 import { reloadDataState, scheduleAccordionActiveState, selectedYearState, userInfoState } from "@/states/states";
 import { css } from "@emotion/react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
@@ -12,7 +12,8 @@ import { AccordionParent } from "../molecules/accordion/AccordionParent";
 import { Button } from "../atoms/button/Button";
 import { Text } from "../atoms/text/Text";
 import { useQuery } from "@tanstack/react-query";
-import { ScheduleChangeForm } from "./ScheduleChangeForm";
+import { ScheduleEditForm } from "./ScheduleEditForm";
+import { t } from "i18next";
 
 export const ScheduleList = () => {
   const selectedYear = useRecoilValue<string>(selectedYearState);
@@ -144,7 +145,7 @@ export const ScheduleList = () => {
                   </>
                 }
                 bodyContent={
-                  <ScheduleChangeForm beforeSchedule={item}/>
+                  <ScheduleEditForm beforeSchedule={item}/>
                 }
                 headerClickHandler={() => {
                   setScheduleAccordionActive(item?.id as string);
@@ -159,7 +160,7 @@ export const ScheduleList = () => {
         ) : (
           <Row>
             <Col>
-              <Text align="center">조회된 항목이 없습니다.</Text>
+              <Text align="center">{s(t("No content was viewed."))}</Text>
             </Col>
           </Row>
         )}
@@ -176,7 +177,7 @@ export const ScheduleList = () => {
                 align="center"
                 btnRef={buttonRef}
               >
-                Load More
+                {s(t("Load More"))}
               </Button>
             ) : (
               <Button align="center">

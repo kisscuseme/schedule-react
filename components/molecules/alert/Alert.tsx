@@ -1,5 +1,7 @@
+import { s } from "@/services/util/util";
 import { showModalState } from "@/states/states";
 import { css } from "@emotion/react";
+import { t } from "i18next";
 import { Modal } from "react-bootstrap";
 import { useSetRecoilState } from "recoil";
 import { Button } from "../../atoms/button/Button";
@@ -54,7 +56,7 @@ export const Alert = ({
             
           }}
         >
-          Confirm
+          {s(t("Confirm"))}
         </Button>}
         <Button
           primary
@@ -70,7 +72,7 @@ export const Alert = ({
             
           }}
         >
-          Close
+          {s(t("Close"))}
         </Button>
       </Modal.Footer>
     </Modal>

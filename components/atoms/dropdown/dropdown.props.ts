@@ -38,6 +38,10 @@ interface DropdownOwnProps {
    * Dropdown Click Item Handler
    */
   onClickItemHandler: (label: string) => void;
+  /**
+   * Title
+   */
+  title?: string;
 }
 
 export type DropdownProps = DropdownOwnProps & Omit<BootstrapDropdownProps, "align" | "children">;

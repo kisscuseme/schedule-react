@@ -2,7 +2,9 @@ import { Container } from "@/components/atoms/container/Container";
 import { Alert } from "@/components/molecules/alert/Alert";
 import { Title } from "@/components/molecules/title/Title";
 import { SignUpForm } from "@/components/organisms/SignUpForm";
+import { s } from "@/services/util/util";
 import { showModalState } from "@/states/states";
+import { t } from "i18next";
 import { useRecoilValue } from "recoil";
 
 export default function SignUp() {
@@ -12,7 +14,7 @@ export default function SignUp() {
     <>
       <Container>
         <Title>
-          회원 가입
+        {s(t("Create an account"))}
         </Title>
         <SignUpForm/>
       </Container>

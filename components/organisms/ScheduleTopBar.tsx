@@ -6,11 +6,14 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { LoginStateType, UserType } from "@/services/firebase/firebase.type";
 import { isLogedInState, selectedYearState, showModalState, userInfoState } from "@/states/states";
 import { logOut } from "@/services/firebase/auth";
-import { getToday, getYearList } from "@/services/util/util";
+import { getToday, getYearList, s } from "@/services/util/util";
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { deleteUser, onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "@/services/firebase/firebase";
+import { t } from "i18next";
+import { LanguageSelector } from "./LanguageSelector";
+import { DivisionLine } from "../molecules/divideLine/DivisionLine";
 
 export const ScheduleTopBar = () => {
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
@@ -76,8 +79,8 @@ export const ScheduleTopBar = () => {
 
   const signOutHandler = () => {
     setShowModal({
-      title: "알림",
-      content: "정말 로그아웃 하시겠습니까?",
+      title: s(t("Check")),
+      content: s(t("Are you sure you want to log out?")),
       show: true,
       confirm: () => {
         signOutMutation.mutate();
@@ -93,8 +96,8 @@ export const ScheduleTopBar = () => {
 
   const deleteUserHandler = () => {
     setShowModal({
-      title: "알림",
-      content: "정말 회원 탈퇴 하시겠습니까?",
+      title: s(t("Check")),
+      content: s(t("Are you sure you want to delete your account?")),
       show: true,
       confirm: () => {
         onAuthStateChanged(firebaseAuth, (user) => {
@@ -119,29 +122,41 @@ export const ScheduleTopBar = () => {
             css={offcanvasStyle}
           >
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title id={`nav-2`}>SCHEDULE</Offcanvas.Title>
+              <Offcanvas.Title id={`nav-2`}>
+                {s(t('SCHEDULE'))}
+              </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Item>E-mail: {userInfo?.email}</Nav.Item>
-                <Nav.Item>Name: {userInfo?.name}</Nav.Item>
-                <Nav.Item>
+              <Row>
+                <Col><LanguageSelector/></Col>
+              </Row>
+              <DivisionLine/>
+              <Row>
+                <Col>{s(t("E-mail"))}: {userInfo?.email}</Col>
+              </Row>
+              <Row>
+                <Col>{s(t("Name"))}: {userInfo?.name}</Col>
+              </Row>
+              <DivisionLine/>
+              <Row>
+                <Col></Col>
+                <Col>
                   <Nav.Link
                     onClick={() => signOutHandler()}
                     css={signOutButtonStyle}
                   >
-                    Sign Out
+                    {s(t("Sign Out"))}
                   </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
+                </Col>
+                <Col>
                   <Nav.Link
                     onClick={() => deleteUserHandler()}
                     css={deleteUserButtonStyle}
                   >
-                    Delete User
+                    {s(t("Delete User"))}
                   </Nav.Link>
-                </Nav.Item>
-              </Nav>
+                </Col>
+              </Row>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Navbar>

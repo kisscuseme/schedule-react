@@ -5,18 +5,19 @@ import { Button } from "../atoms/button/Button";
 import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { reloadDataState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
-import { getReformDate } from "@/services/util/util";
+import { getReformDate, s } from "@/services/util/util";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
 import { useMutation } from "@tanstack/react-query";
+import { t } from "i18next";
 
-interface ScheduleChangeFromProps {
+interface ScheduleEditFromProps {
   beforeSchedule: ScheduleType
 }
 
-export const ScheduleChangeForm = ({
+export const ScheduleEditForm = ({
   beforeSchedule
-}: ScheduleChangeFromProps) => {
+}: ScheduleEditFromProps) => {
   const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
     fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
     toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
@@ -56,20 +57,20 @@ export const ScheduleChangeForm = ({
     if(scheduleInput.schedule === "") {
       setShowModal({
         show: true,
-        title: "알림",
-        content: "내용을 입력하세요."
+        title: s(t("Check")),
+        content: s(t("Please enter your content."))
       });  
     } else if(scheduleInput.fromDate === "" || scheduleInput.toDate === "") {
       setShowModal({
         show: true,
-        title: "알림",
-        content: "날짜를 입력하세요."
+        title: s(t("Check")),
+        content: s(t("Please enter a date."))
       });
     } else {
       setShowModal({
         show: true,
-        title: "알림",
-        content: "정말 수정하시겠습니까?",
+        title: s(t("Check")),
+        content: s(t("Are you sure you want to edit?")),
         confirm: () => {
           changeScheduleMutation.mutate({
             uid: userInfo?.uid as string,
@@ -96,8 +97,8 @@ export const ScheduleChangeForm = ({
   const deleteSchedule = (event: SyntheticEvent<any, Event>, eventHandler: EventHandler<SyntheticEvent<any, Event>>) => {
     setShowModal({
       show: true,
-      title: "경고",
-      content: "정말 삭제하시겠습니까?",
+      title: s(t("Caution")),
+      content: s(t("Are you sure you want to delete?")),
       confirm: () => {
         deleteScheduleMutation.mutate({
           uid: userInfo?.uid as string,
@@ -123,7 +124,7 @@ export const ScheduleChangeForm = ({
             backgroundColor="#fefefe"
             onClick={resetChange}
           >
-            Reset
+            {s(t("Reset"))}
           </Button>
         </Col>
         <Col>
@@ -136,7 +137,7 @@ export const ScheduleChangeForm = ({
               changeSchedule(e, closeAccordion);
             }}
           >
-            Change
+            {s(t("Edit"))}
           </Button>
         </Col>
         <Col>
@@ -149,7 +150,7 @@ export const ScheduleChangeForm = ({
               deleteSchedule(e, closeAccordion);
             }}
           >
-            Delete
+            {s(t("Delete"))}
           </Button>
         </Col>
       </Row>

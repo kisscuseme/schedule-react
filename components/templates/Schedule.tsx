@@ -3,24 +3,19 @@ import { ScheduleAddForm } from "@/components/organisms/ScheduleAddForm";
 import { ScheduleList } from "@/components/organisms/ScheduleList";
 import { ScheduleTopBar } from "@/components/organisms/ScheduleTopBar";
 import { showModalState } from "@/states/states";
-import { css } from "@emotion/react";
 import { useRecoilValue } from "recoil";
 import { Alert } from "../molecules/alert/Alert";
+import { DivisionLine } from "../molecules/divideLine/DivisionLine";
 
 export default function Schedule() {
   const showModal = useRecoilValue(showModalState);
-
-  const divideStyle = `
-    border-top: 1px #ffffff solid;
-    margin: 5px;
-  `;
 
   return (
     <>
       <Container>
         <ScheduleTopBar/>
         <ScheduleAddForm/>
-        <div css={css(divideStyle)}></div>
+        <DivisionLine/>
         <ScheduleList/>
       </Container>
       <Alert

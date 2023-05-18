@@ -55,4 +55,8 @@ const checkPassword = (password: string) => {
   return passwordRegEx.test(password);
 };
 
-export { checkEmail, checkPassword, getDay, getReformDate, getToday, getYearList }
+const s = (translationKey: string | undefined | null) => {
+  return translationKey || "";
+}
+
+export { checkEmail, checkPassword, getDay, getReformDate, getToday, getYearList, s }

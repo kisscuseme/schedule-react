@@ -36,3 +36,8 @@ export const scheduleAccordionActiveState = atom<string>({
   key: "scheduleAccordionActiveState",
   default: ""
 });
+
+export const selectedLanguageState = atom<string>({
+  key: "selectedLanguageState",
+  default: "kr"
+});

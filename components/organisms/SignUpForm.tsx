@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import { checkEmail, checkPassword } from "@/services/util/util";
+import { checkEmail, checkPassword, s } from "@/services/util/util";
 import { useRouter } from "next/router";
 import { Text } from "../atoms/text/Text";
 import { signUp } from "@/services/firebase/auth";
@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetRecoilState } from "recoil";
 import { showModalState } from "@/states/states";
 import { sendEmailVerification, updateProfile, UserCredential } from "firebase/auth";
+import { t } from "i18next";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -70,8 +71,8 @@ export const SignUpForm = () => {
           localStorage.setItem("email", email);
           setShowModal({
             show: true,
-            title: "알림",
-            content: "가입이 완료되었습니다. 발송된 인증 메일을 확인해 주세요.",
+            title: s(t("Check")),
+            content: `${s(t("Your account creation is complete."))} ${s(t("Please check the verification e-mail sent."))}`,
             callback: () => {
               setName("");
               setEmail("");
@@ -89,21 +90,21 @@ export const SignUpForm = () => {
 
   const signUpHandleSubmit = () => {
     if(email === "") {
-      setErrorMsg("이메일을 입력해 주세요.");
+      setErrorMsg(s(t("Please enter your e-mail.")));
     } else if(!checkEmail(email)) {
-      setErrorMsg("이메일 형식을 확인해 주세요.");
+      setErrorMsg(s(t("Please check your e-mail format.")));
     } else if(name === "") {
-      setErrorMsg("이름을 입력해 주세요.");
+      setErrorMsg(s(t("Enter your name, please.")));
     } else if(!checkPassword(password)) {
-      setErrorMsg("비밀번호는 최소 6자리 이상 입력해 주세요.");
+      setErrorMsg(s(t("Please enter a password of at least 6 digits.")));
     } else if(password !== reconfirmPassword) {
-      setErrorMsg("입력한 비밀번호가 동일하지 않습니다.");
+      setErrorMsg(s(t("The entered password and reconfirm password are not the same.")));
     } else {
       setErrorMsg("");
       setShowModal({
         show: true,
-        title: "알림",
-        content: "회원 가입을 하시겠습니까?",
+        title: s(t("Check")),
+        content: s(t("Would you like to create an account?")),
         confirm: () => {
           signUpMutation.mutate({ email: email, password });
         }
@@ -133,7 +134,7 @@ export const SignUpForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Email"
+            placeholder={s(t("E-mail"))}
             type="email"
             onChange={emailChangeHandler}
             clearButton={true}
@@ -148,7 +149,7 @@ export const SignUpForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Name"
+            placeholder={s(t("Name"))}
             type="text"
             value={name}
             onChange={nameChangeHandler}
@@ -164,7 +165,7 @@ export const SignUpForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Password"
+            placeholder={s(t("Password"))}
             type="password"
             value={password}
             onChange={passwordChangeHandler}
@@ -180,7 +181,7 @@ export const SignUpForm = () => {
       <Row>
         <Col>
           <Input
-            placeholder="Reconfirm Password"
+            placeholder={s(t("Reconfirm Password"))}
             type="password"
             value={reconfirmPassword}
             onChange={reconfirmPasswordChangeHandler}
@@ -200,7 +201,7 @@ export const SignUpForm = () => {
             primary
             onClick={signUpHandleSubmit}
           >
-            Registration
+            {s(t("Create"))}
           </Button>
         </Col>
       </Row>
