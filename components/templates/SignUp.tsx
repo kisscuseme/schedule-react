@@ -1,20 +1,20 @@
 import { Container } from "@/components/atoms/container/Container";
-import { SignInForm } from "@/components/organisms/SignInForm";
+import { Alert } from "@/components/molecules/alert/Alert";
+import { Title } from "@/components/molecules/title/Title";
+import { SignUpForm } from "@/components/organisms/SignUpForm";
 import { showModalState } from "@/states/states";
 import { useRecoilValue } from "recoil";
-import { Alert } from "../molecules/alert/Alert";
-import { Title } from "../molecules/title/Title";
 
-export default function SignIn() {
+export default function SignUp() {
   const showModal = useRecoilValue(showModalState);
 
   return (
     <>
       <Container>
         <Title>
-          일정 관리
+          회원 가입
         </Title>
-        <SignInForm/>
+        <SignUpForm/>
       </Container>
       <Alert
         title={showModal.title}

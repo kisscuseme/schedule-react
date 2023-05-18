@@ -8,7 +8,7 @@ import { insertScheduleData } from "@/services/firebase/db";
 import { UserType } from "@/services/firebase/firebase.type";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
-import { doMutaion } from "@/services/util/simplify";
+import { useMutation } from "@tanstack/react-query";
 
 export const ScheduleAddForm = () => {
   const setShowModal = useSetRecoilState(showModalState);
@@ -20,13 +20,15 @@ export const ScheduleAddForm = () => {
     schedule: ""
   });
 
-  const insertScheduleMutation = doMutaion(insertScheduleData, (data) => {
-    setScheduleInput({
-      fromDate: getToday(),
-      toDate: getToday(),
-      schedule: ""
-    });
-    setReloadData(true);
+  const insertScheduleMutation = useMutation(insertScheduleData, {
+    onSuccess() {
+      setScheduleInput({
+        fromDate: getToday(),
+        toDate: getToday(),
+        schedule: ""
+      });
+      setReloadData(true);
+    }
   });
 
   const changeSchedule = () => {

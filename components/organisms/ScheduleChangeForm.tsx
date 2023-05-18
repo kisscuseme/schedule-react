@@ -8,7 +8,7 @@ import { reloadDataState, scheduleAccordionActiveState, showModalState, userInfo
 import { getReformDate } from "@/services/util/util";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
-import { doMutaion } from "@/services/util/simplify";
+import { useMutation } from "@tanstack/react-query";
 
 interface ScheduleChangeFromProps {
   beforeSchedule: ScheduleType
@@ -45,9 +45,11 @@ export const ScheduleChangeForm = ({
     });
   }
 
-  const changeScheduleMutation = doMutaion(updateScheduleData, (data) => {
-    setScheduleAccordionActive("");
-    setReloadData(true);
+  const changeScheduleMutation = useMutation(updateScheduleData, {
+    onSuccess() {
+      setScheduleAccordionActive("");
+      setReloadData(true);
+    }
   });
 
   const changeSchedule = (event: SyntheticEvent<any, Event>, eventHandler: EventHandler<SyntheticEvent<any, Event>>) => {
@@ -84,9 +86,11 @@ export const ScheduleChangeForm = ({
     }
   }
 
-  const deleteScheduleMutation = doMutaion(deleteScheduleData, (data) => {
-    setScheduleAccordionActive("");
-    setReloadData(true);
+  const deleteScheduleMutation = useMutation(deleteScheduleData, {
+    onSuccess() {
+      setScheduleAccordionActive("");
+      setReloadData(true);
+    },
   });
 
   const deleteSchedule = (event: SyntheticEvent<any, Event>, eventHandler: EventHandler<SyntheticEvent<any, Event>>) => {

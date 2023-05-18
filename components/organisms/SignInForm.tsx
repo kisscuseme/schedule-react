@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { useRouter } from "next/router";
-import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { checkEmail } from "@/services/util/util";
 import { Text } from "../atoms/text/Text";
 import { firebaseAuth } from "@/services/firebase/firebase";
@@ -20,13 +20,22 @@ export const SignInForm = () => {
     text-align: center;
   `;
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(localStorage.getItem("email")||"");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
   const setShowModal = useSetRecoilState(showModalState);
   const emailClearButtonRef = useRef<HTMLButtonElement>(null);
   const passwordClearButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if(password === "") {
+      passwordClearButtonRef.current?.click();
+    }
+    if(email === "") {
+      emailClearButtonRef.current?.click();
+    }
+  }, [password, email]);
 
   const router = useRouter();
 
@@ -35,13 +44,7 @@ export const SignInForm = () => {
   }
 
   const signInMutation = useMutation(signInWithEmail, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
+    onSuccess(data) {
       if(typeof data !== 'string') {
         if(data.user.emailVerified) {
           if(userInfo === null) {
@@ -51,6 +54,7 @@ export const SignInForm = () => {
               email: data.user.email as string
             });
           }
+          localStorage.setItem("email", email);
           router.reload();
         } else {
           setShowModal({
@@ -61,22 +65,34 @@ export const SignInForm = () => {
               setShowModal({
                 show: false
               });
-              await sendEmailVerification(data.user);
-              setPassword("");
-              setShowModal({
-                show: true,
-                title: "알림",
-                content: "인증 메일 재발송이 완료되었습니다."
-              });
+              try {
+                await sendEmailVerification(data.user);
+                setPassword("");
+                setShowModal({
+                  show: true,
+                  title: "알림",
+                  content: "인증 메일 재발송이 완료되었습니다."
+                });
+              } catch(error: any) {
+                let message;
+                if(error.code === "auth/too-many-requests" ) {
+                  message = "시도 횟수가 많습니다. 조금 후에 다시 시도해 주세요.";
+                } else {
+                  message = error.message;
+                }
+
+                setShowModal({
+                  show: true,
+                  title: "알림",
+                  content: message
+                });
+              }
             }
           });
         }
       } else {
         setErrorMsg(data);
       }
-    },
-    onSettled: () => {
-      // console.log("end");
     }
   });
 
@@ -102,22 +118,27 @@ export const SignInForm = () => {
   }
 
   const resetPasswordMutation = useMutation(resetPassword, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
+    onError: (error: any) => {
+      let message;
+      if(error.code === "auth/too-many-requests" ) {
+        message = "시도 횟수가 많습니다. 조금 후에 다시 시도해 주세요.";
+
+      } else {
+        message = error.message;
+      }
+      setShowModal({
+        show: true,
+        title: "알림",
+        content: message
+      });
     },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
+    onSuccess: () => {
       setShowModal({
         show: true,
         title: "알림",
         content: "메일 발송을 완료하였습니다."
       });
     },
-    onSettled: () => {
-      // console.log("end");
-    }
   });
 
   const resetPasswordClickHandler = () => {

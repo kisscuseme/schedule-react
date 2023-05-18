@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
-import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { checkEmail, checkPassword } from "@/services/util/util";
 import { useRouter } from "next/router";
 import { Text } from "../atoms/text/Text";
@@ -24,6 +24,21 @@ export const SignUpForm = () => {
   const passwordClearButtonRef = useRef<HTMLButtonElement>(null);
   const reconfirmPasswordClearButtonRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    if(password === "") {
+      passwordClearButtonRef.current?.click();
+    }
+    if(email === "") {
+      emailClearButtonRef.current?.click();
+    }
+    if(name === "") {
+      nameClearButtonRef.current?.click();
+    }
+    if(reconfirmPassword === "") {
+      reconfirmPasswordClearButtonRef.current?.click();
+    }
+  }, [password, email, name, reconfirmPassword]);
+
   const emailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
   }
@@ -45,23 +60,18 @@ export const SignUpForm = () => {
   }
 
   const signUpMutation = useMutation(signUpWithEmail, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: async (data: UserCredential | string, variables, context) => {
+    onSuccess: async (data: UserCredential | string) => {
       try {
         if(typeof data === "string") {
           setErrorMsg(data);
         } else {
           await updateProfile(data.user, {displayName: name});
           await sendEmailVerification(data.user);
+          localStorage.setItem("email", email);
           setShowModal({
             show: true,
             title: "알림",
-            content: "거의 완료되었습니다. 발송된 인증 메일을 확인해 주세요.",
+            content: "가입이 완료되었습니다. 발송된 인증 메일을 확인해 주세요.",
             callback: () => {
               setName("");
               setEmail("");
@@ -74,9 +84,6 @@ export const SignUpForm = () => {
       } catch(error: any) {
         console.log(error);
       }
-    },
-    onSettled: () => {
-      // console.log("end");
     }
   });
 

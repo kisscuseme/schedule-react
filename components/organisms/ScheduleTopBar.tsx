@@ -9,7 +9,8 @@ import { logOut } from "@/services/firebase/auth";
 import { getToday, getYearList } from "@/services/util/util";
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { doMutaion } from "@/services/util/simplify";
+import { deleteUser, onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "@/services/firebase/firebase";
 
 export const ScheduleTopBar = () => {
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
@@ -48,18 +49,29 @@ export const ScheduleTopBar = () => {
     float: right;
   `;
 
+  const deleteUserButtonStyle = css`
+    color: hotpink;
+    width: fit-content;
+    float: right;
+    &:hover {
+      color: pink;
+    }
+  `;
+
   const data = getYearList();
 
   const selectYear = (year: string) => {
     setSelectedYear(year);
   }
 
-  const signOutMutation = doMutaion(logOut, (data) => {
-    if(data) {
-      setUserInfo(null);
-      setIsLogedIn(null);
-      router.replace("/");
-    }
+  const signOutMutation = useMutation(logOut, {
+    onSuccess(data) {
+      if(data) {
+        setUserInfo(null);
+        setIsLogedIn(null);
+        router.replace("/");
+      }
+    },
   });
 
   const signOutHandler = () => {
@@ -69,6 +81,25 @@ export const ScheduleTopBar = () => {
       show: true,
       confirm: () => {
         signOutMutation.mutate();
+      }
+    });
+  }
+
+  const deleteUserMutation = useMutation(deleteUser, {
+    onSuccess() {
+      router.reload();
+    }
+  });
+
+  const deleteUserHandler = () => {
+    setShowModal({
+      title: "알림",
+      content: "정말 회원 탈퇴 하시겠습니까?",
+      show: true,
+      confirm: () => {
+        onAuthStateChanged(firebaseAuth, (user) => {
+          if(user) deleteUserMutation.mutate(user);
+        })();
       }
     });
   }
@@ -88,7 +119,7 @@ export const ScheduleTopBar = () => {
             css={offcanvasStyle}
           >
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title id={`nav-2`}>MENU</Offcanvas.Title>
+              <Offcanvas.Title id={`nav-2`}>SCHEDULE</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
@@ -100,6 +131,14 @@ export const ScheduleTopBar = () => {
                     css={signOutButtonStyle}
                   >
                     Sign Out
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    onClick={() => deleteUserHandler()}
+                    css={deleteUserButtonStyle}
+                  >
+                    Delete User
                   </Nav.Link>
                 </Nav.Item>
               </Nav>

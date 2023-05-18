@@ -1,15 +1,13 @@
 import { firebaseAuth } from "@/services/firebase/firebase";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { isLogedInState, showModalState, userInfoState } from "@/states/states";
+import { useRecoilState } from "recoil";
+import { isLogedInState, userInfoState } from "@/states/states";
 import Schedule from "@/components/templates/Schedule";
-import SignIn from "@/components/templates/Signin";
-import { Alert } from "@/components/molecules/alert/Alert";
+import SignIn from "@/components/templates/SignIn";
 import { LoadingScreen } from "@/components/molecules/loadingScreen/LoadingScreen";
 
 export default function Home() {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [isLogedIn, setIsLogedIn] = useRecoilState(isLogedInState);
-  const showModal = useRecoilValue(showModalState);
 
   firebaseAuth.onAuthStateChanged((user) => {
     if (user && user.emailVerified) {
@@ -24,20 +22,7 @@ export default function Home() {
     }
   })();
 
-  return (
-    <>
-      {
-        (isLogedIn === null && <LoadingScreen/>) ||
-        (isLogedIn === true && <Schedule/>) ||
-        (isLogedIn === false && <SignIn/>)
-      }
-      <Alert
-        title={showModal.title}
-        content={showModal.content}
-        show={showModal.show}
-        callback={showModal.callback}
-        confirm={showModal.confirm}
-      />
-    </>
-  )
+  if(isLogedIn === null) return <LoadingScreen/>
+  else if(isLogedIn === true) return <Schedule/>
+  else if(isLogedIn === false) return <SignIn/>
 }
