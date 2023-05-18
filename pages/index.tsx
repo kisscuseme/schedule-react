@@ -2,8 +2,8 @@ import { firebaseAuth } from "@/services/firebase/firebase";
 import { useRecoilState } from "recoil";
 import { isLogedInState, userInfoState } from "@/states/states";
 import Schedule from "@/components/templates/Schedule";
-import SignIn from "@/components/templates/SignIn";
 import { LoadingScreen } from "@/components/molecules/loadingScreen/LoadingScreen";
+import SignIn from "@/components/templates/SignIn";
 
 export default function Home() {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
