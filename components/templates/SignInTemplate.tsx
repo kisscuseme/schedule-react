@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { Alert } from "../molecules/alert/Alert";
 import { Title } from "../molecules/title/Title";
 
-export default function SignIn() {
+export default function SignInTemplate() {
   const showModal = useRecoilValue(showModalState);
 
   return (

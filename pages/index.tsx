@@ -2,7 +2,7 @@ import { firebaseAuth } from "@/services/firebase/firebase";
 import { useRecoilState } from "recoil";
 import { isLogedInState, userInfoState } from "@/states/states";
 import Schedule from "@/components/templates/Schedule";
-import SignIn from "@/components/templates/SignIn";
+import SignInTemplate from "@/components/templates/SignInTemplate";
 import { LoadingScreen } from "@/components/molecules/loadingScreen/LoadingScreen";
 
 export default function Home() {
@@ -24,5 +24,5 @@ export default function Home() {
 
   if(isLogedIn === null) return <LoadingScreen/>
   else if(isLogedIn === true) return <Schedule/>
-  else if(isLogedIn === false) return <SignIn/>
+  else if(isLogedIn === false) return <SignInTemplate/>
 }
