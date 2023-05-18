@@ -6,9 +6,9 @@ import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { reloadDataState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
 import { getReformDate } from "@/services/util/util";
-import { useMutation } from "@tanstack/react-query";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
+import { doMutaion } from "@/services/util/simplify";
 
 interface ScheduleChangeFromProps {
   beforeSchedule: ScheduleType
@@ -45,20 +45,9 @@ export const ScheduleChangeForm = ({
     });
   }
 
-  const changeScheduleMutation = useMutation(updateScheduleData, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
-      setScheduleAccordionActive("");
-      setReloadData(true);
-    },
-    onSettled: () => {
-      // console.log("end");
-    }
+  const changeScheduleMutation = doMutaion(updateScheduleData, (data) => {
+    setScheduleAccordionActive("");
+    setReloadData(true);
   });
 
   const changeSchedule = (event: SyntheticEvent<any, Event>, eventHandler: EventHandler<SyntheticEvent<any, Event>>) => {
@@ -95,20 +84,9 @@ export const ScheduleChangeForm = ({
     }
   }
 
-  const deleteScheduleMutation = useMutation(deleteScheduleData, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
-      setScheduleAccordionActive("");
-      setReloadData(true);
-    },
-    onSettled: () => {
-      // console.log("end");
-    }
+  const deleteScheduleMutation = doMutaion(deleteScheduleData, (data) => {
+    setScheduleAccordionActive("");
+    setReloadData(true);
   });
 
   const deleteSchedule = (event: SyntheticEvent<any, Event>, eventHandler: EventHandler<SyntheticEvent<any, Event>>) => {

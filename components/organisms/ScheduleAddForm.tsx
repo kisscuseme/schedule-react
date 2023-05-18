@@ -1,46 +1,32 @@
 import { Col, Row } from "react-bootstrap";
 import { Button } from "../atoms/button/Button";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { getReformDate, getToday } from "@/services/util/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { reloadDataState, showModalState, userInfoState } from "@/states/states";
-import { useMutation } from "@tanstack/react-query";
 import { insertScheduleData } from "@/services/firebase/db";
 import { UserType } from "@/services/firebase/firebase.type";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
+import { doMutaion } from "@/services/util/simplify";
 
 export const ScheduleAddForm = () => {
   const setShowModal = useSetRecoilState(showModalState);
   const setReloadData = useSetRecoilState(reloadDataState);
   const userInfo = useRecoilValue<UserType>(userInfoState);
-  const scheduleClearBtnRef = useRef<HTMLButtonElement>(null);
   const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
     fromDate: getToday(),
     toDate: getToday(),
     schedule: ""
   });
 
-  const insertScheduleMutation = useMutation(insertScheduleData, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
-      setScheduleInput({
-        fromDate: getToday(),
-        toDate: getToday(),
-        schedule: ""
-      });
-      console.log(scheduleClearBtnRef);
-      if(scheduleClearBtnRef.current) scheduleClearBtnRef.current.click();
-      setReloadData(true);
-    },
-    onSettled: () => {
-      // console.log("end");
-    }
+  const insertScheduleMutation = doMutaion(insertScheduleData, (data) => {
+    setScheduleInput({
+      fromDate: getToday(),
+      toDate: getToday(),
+      schedule: ""
+    });
+    setReloadData(true);
   });
 
   const changeSchedule = () => {

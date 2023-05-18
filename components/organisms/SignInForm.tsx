@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
 import { useRouter } from "next/router";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { checkEmail } from "@/services/util/util";
 import { Text } from "../atoms/text/Text";
 import { firebaseAuth } from "@/services/firebase/firebase";
@@ -25,6 +25,8 @@ export const SignInForm = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
   const setShowModal = useSetRecoilState(showModalState);
+  const emailClearButtonRef = useRef<HTMLButtonElement>(null);
+  const passwordClearButtonRef = useRef<HTMLButtonElement>(null);
 
   const router = useRouter();
 
@@ -178,6 +180,10 @@ export const SignInForm = () => {
             value={email}
             onChange={emailChangeHandler}
             clearButton={true}
+            clearBtnRef={emailClearButtonRef}
+            onClearButtonClick={() => {
+              setEmail("");
+            }}
             onKeyUp={(enterKeyUpEventHandler)}
           />
         </Col>
@@ -190,6 +196,10 @@ export const SignInForm = () => {
             value={password}
             onChange={passwordChangeHandler}
             clearButton={true}
+            clearBtnRef={passwordClearButtonRef}
+            onClearButtonClick={() => {
+              setPassword("");
+            }}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>

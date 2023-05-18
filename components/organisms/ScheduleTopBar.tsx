@@ -9,6 +9,7 @@ import { logOut } from "@/services/firebase/auth";
 import { getToday, getYearList } from "@/services/util/util";
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { doMutaion } from "@/services/util/simplify";
 
 export const ScheduleTopBar = () => {
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
@@ -53,22 +54,11 @@ export const ScheduleTopBar = () => {
     setSelectedYear(year);
   }
 
-  const signOutMutation = useMutation(logOut, {
-    onMutate: variable => {
-      // console.log("onMutate", variable);
-    },
-    onError: (error, variable, context) => {
-      // error
-    },
-    onSuccess: (data, variables, context) => {
-      if(data) {
-        setUserInfo(null);
-        setIsLogedIn(null);
-        router.replace("/");
-      }
-    },
-    onSettled: () => {
-      // console.log("end");
+  const signOutMutation = doMutaion(logOut, (data) => {
+    if(data) {
+      setUserInfo(null);
+      setIsLogedIn(null);
+      router.replace("/");
     }
   });
 

@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { Input } from "../atoms/input/Input";
 import { Button } from "../atoms/button/Button";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { checkEmail, checkPassword } from "@/services/util/util";
 import { useRouter } from "next/router";
 import { Text } from "../atoms/text/Text";
@@ -19,6 +19,10 @@ export const SignUpForm = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const setShowModal = useSetRecoilState(showModalState);
   const router = useRouter();
+  const emailClearButtonRef = useRef<HTMLButtonElement>(null);
+  const nameClearButtonRef = useRef<HTMLButtonElement>(null);
+  const passwordClearButtonRef = useRef<HTMLButtonElement>(null);
+  const reconfirmPasswordClearButtonRef = useRef<HTMLButtonElement>(null);
 
   const emailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
@@ -126,6 +130,10 @@ export const SignUpForm = () => {
             type="email"
             onChange={emailChangeHandler}
             clearButton={true}
+            clearBtnRef={emailClearButtonRef}
+            onClearButtonClick={() => {
+              setEmail("");
+            }}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
@@ -138,6 +146,10 @@ export const SignUpForm = () => {
             value={name}
             onChange={nameChangeHandler}
             clearButton={true}
+            clearBtnRef={nameClearButtonRef}
+            onClearButtonClick={() => {
+              setName("");
+            }}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
@@ -150,6 +162,10 @@ export const SignUpForm = () => {
             value={password}
             onChange={passwordChangeHandler}
             clearButton={true}
+            clearBtnRef={passwordClearButtonRef}
+            onClearButtonClick={() => {
+              setPassword("");
+            }}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
@@ -162,6 +178,10 @@ export const SignUpForm = () => {
             value={reconfirmPassword}
             onChange={reconfirmPasswordChangeHandler}
             clearButton={true}
+            clearBtnRef={reconfirmPasswordClearButtonRef}
+            onClearButtonClick={() => {
+              setReconfirmPassword("");
+            }}
             onKeyUp={enterKeyUpEventHandler}
           />
         </Col>
