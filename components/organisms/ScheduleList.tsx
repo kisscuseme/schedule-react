@@ -89,7 +89,6 @@ export const ScheduleList = () => {
       // 현재의 스크롤 값을 저장
       lastScrollY = scrollY;
     });
-    // queryClickHandler();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -105,8 +104,6 @@ export const ScheduleList = () => {
       setScheduleData([]);
     }
     if(reloadData || lastVisible) {
-      // queryClickHandler();
-      setScheduleAccordionActive("");
       refetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,7 +116,9 @@ export const ScheduleList = () => {
 
   return (
     <>
-      <AccordionParent defaultActiveKey={scheduleAccordionActive}>
+      <AccordionParent defaultActiveKey={scheduleAccordionActive} onSelect={(e) => {
+        setScheduleAccordionActive(e as string);
+      }}>
         {scheduledata.length > 0 ? (
           scheduledata.map((item) => (
             <Row key={item?.id}>
@@ -147,9 +146,6 @@ export const ScheduleList = () => {
                 bodyContent={
                   <ScheduleEditForm beforeSchedule={item}/>
                 }
-                headerClickHandler={() => {
-                  setScheduleAccordionActive(item?.id as string);
-                }}
               />
             </Row>
           ))

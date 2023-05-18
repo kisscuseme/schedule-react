@@ -32,7 +32,7 @@ export const ScheduleEditForm = ({
 
   useEffect(() => {
     if(beforeSchedule?.id as string === scheduleAccordionActive) {
-      setScheduleAccordionActive("");
+      setScheduleAccordionActive(null);
       closeAccordionButtonRef.current?.click();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +48,6 @@ export const ScheduleEditForm = ({
 
   const changeScheduleMutation = useMutation(updateScheduleData, {
     onSuccess() {
-      setScheduleAccordionActive("");
       setReloadData(true);
     }
   });
@@ -89,7 +88,6 @@ export const ScheduleEditForm = ({
 
   const deleteScheduleMutation = useMutation(deleteScheduleData, {
     onSuccess() {
-      setScheduleAccordionActive("");
       setReloadData(true);
     },
   });

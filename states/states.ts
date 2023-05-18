@@ -32,7 +32,7 @@ export const showModalState = atom<AlertType>({
   }
 });
 
-export const scheduleAccordionActiveState = atom<string>({
+export const scheduleAccordionActiveState = atom<string | null>({
   key: "scheduleAccordionActiveState",
   default: ""
 });
