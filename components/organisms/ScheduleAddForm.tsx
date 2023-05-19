@@ -10,6 +10,9 @@ import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
 import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
+import { AccordionParent } from "../molecules/accordion/AccordionParent";
+import { AccordionChild } from "../molecules/accordion/AccordionChild";
+import { Text } from "../atoms/text/Text";
 
 interface ScheduleAddFromProps {
   scheduleList: ScheduleType[]
@@ -44,8 +47,8 @@ export const ScheduleAddForm = ({
       scheduleList.sort((a, b) => {
         if(a === null || b === null) return 0
         else {
-          const numA = Number(a.date.replaceAll(".","").substring(0,8));
-          const numB = Number(b.date.replaceAll(".","").substring(0,8));
+          const numA: number = Number(a.date.replaceAll(".","").substring(0,8));
+          const numB: number = Number(b.date.replaceAll(".","").substring(0,8));
           return numB - numA;
         }
       });
@@ -79,25 +82,40 @@ export const ScheduleAddForm = ({
   }
 
   return (
-    <>
-      <ScheduleInputForm
-        scheduleInput={scheduleInput}
-        setScheduleInput={setScheduleInput}
-        scheduleInputPlaceholder={s(t("Enter your schedule."))}
-      />
-      <Row>
-        <Col>
-          <Button
-            align="right"
-            backgroundColor="#3e3e3e"
-            color="#fefefe"
-            onClick={changeSchedule}
-            size="small"
-          >
-            {s(t("Add"))}
-          </Button>
-        </Col>
-      </Row>
-    </>
+    <AccordionParent defaultActiveKey={"ScheduleAddForm"}>
+      <AccordionChild
+        dataId="ScheduleAddForm"
+        headerContent={
+          <Row>
+            <Col>
+              <Text color="#5f5f5f">{`[${s(t("Enter schedule"))}]`}</Text>
+            </Col>
+          </Row>
+        }
+        bodyContent={
+          <>
+            <ScheduleInputForm
+              scheduleInput={scheduleInput}
+              setScheduleInput={setScheduleInput}
+              scheduleInputPlaceholder={s(t("Enter your schedule."))}
+            />
+            <Row>
+              <Col>
+                <Button
+                  align="right"
+                  backgroundColor="#3e3e3e"
+                  color="#fefefe"
+                  onClick={changeSchedule}
+                  size="small"
+                >
+                  {s(t("Add"))}
+                </Button>
+              </Col>
+            </Row>
+          </>
+        }
+      >
+      </AccordionChild>
+    </AccordionParent>
   )
 }

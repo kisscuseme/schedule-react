@@ -60,7 +60,7 @@ export const Dropdown = ({
 
   return (
     <BootstrapDropdown css={css(parentStyle)} align={itemAlign} {...props}>
-      {title}
+      <span css={css("vertical-align: middle;")}>{title}</span>
       <BootstrapDropdown.Toggle
         variant="primary"
         id={id}

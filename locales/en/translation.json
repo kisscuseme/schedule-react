@@ -48,5 +48,13 @@
   "Create an account": "Create an account",
   "Close": "Close",
   "Error": "Error",
-  "Language": "Language"
+  "Language": "Language",
+  "Mon": "Mon",
+  "Tue": "Tue",
+  "Wed": "Wed",
+  "Thu": "Thu",
+  "Fri": "Fri",
+  "Sat": "Sat",
+  "Sun": "Sun",
+  "Enter schedule": "Enter schedule"
 }

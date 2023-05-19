@@ -1,6 +1,6 @@
 import { queryScheduleData } from "@/services/firebase/db";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
-import { getYearList, s } from "@/services/util/util";
+import { getDay, getYearList, s } from "@/services/util/util";
 import { reloadDataState, rerenderDataState, scheduleAccordionActiveState, selectedYearState, userInfoState } from "@/states/states";
 import { css } from "@emotion/react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
@@ -31,7 +31,6 @@ export const ScheduleList = () => {
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
 
   useEffect(() => {
-    console.log(scheduleData);
   }, [rerenderData]);
 
   const getYearRange = () => {
@@ -137,12 +136,12 @@ export const ScheduleList = () => {
                   <>
                     <Col xs={5}>
                       <Row>
-                        <Text>{item?.date}</Text>
+                        <Text>{item?.date} {`(${s(t(getDay(item?.date||"")))})`}</Text>
                       </Row>
                       {
                         item?.toDate && item?.date !== item?.toDate && <>
                           <Row>
-                            <Text color="#6e6e6e" size="medium">{"~ " + item?.toDate}</Text>
+                            <Text color="#6e6e6e" size="medium">{"~ " + item?.toDate} {`(${s(t(getDay(item?.toDate||"")))})`}</Text>
                           </Row>
                         </>
                       }

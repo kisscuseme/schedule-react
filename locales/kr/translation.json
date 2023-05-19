@@ -48,5 +48,13 @@
   "Create an account": "계정 생성",
   "Close": "닫기",
   "Error": "오류",
-  "Language": "언어"
+  "Language": "언어",
+  "Mon": "월",
+  "Tue": "화",
+  "Wed": "수",
+  "Thu": "목",
+  "Fri": "금",
+  "Sat": "토",
+  "Sun": "일",
+  "Enter schedule": "일정 입력"
 }

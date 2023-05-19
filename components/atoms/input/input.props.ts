@@ -37,6 +37,10 @@ interface InputOwnProps {
    * onClearButtonClick
    */
   onClearButtonClick?: () => void;
+  /**
+   * initValue
+   */
+  initValue?: string;
 }
 
 export type InputProps = InputOwnProps & Omit<HTMLProps<HTMLInputElement>, "size">

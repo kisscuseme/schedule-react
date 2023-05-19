@@ -200,6 +200,7 @@ export const SignInForm = () => {
             placeholder={s(t("E-mail"))}
             type="email"
             value={email}
+            initValue={email}
             onChange={emailChangeHandler}
             clearButton={true}
             clearBtnRef={emailClearButtonRef}

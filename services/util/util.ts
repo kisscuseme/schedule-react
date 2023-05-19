@@ -1,4 +1,5 @@
 import { DropdownDataProps } from "@/components/atoms/dropdown/dropdown.props";
+import { t } from "i18next";
 
 const getDay = (date: string) => {
   var yyyyMMdd = getReformDate(date, "").substring(0, 8);
@@ -6,7 +7,7 @@ const getDay = (date: string) => {
   var sMonth = yyyyMMdd.substring(4, 6);
   var sDate = yyyyMMdd.substring(6, 8);
   var targetDate = new Date(Number(sYear), Number(sMonth) - 1, Number(sDate));
-  var week = ["일", "월", "화", "수", "목", "금", "토"];
+  var week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return week[targetDate.getDay()];
 };
 
@@ -17,7 +18,7 @@ const getReformDate = (date: string, dvsn: string) => {
     reformDate = reformDate.replaceAll(".", dvsn);
     reformDate = reformDate.replaceAll("-", dvsn);
     if(dvsn === '-') reformDate = reformDate.substring(0, 10);
-    if(dvsn === '.') reformDate = `${reformDate.substring(0, 10)} (${getDay(date)})`;
+    if(dvsn === '.') reformDate = reformDate.substring(0, 10);
     return reformDate;
   } else {
     return ""

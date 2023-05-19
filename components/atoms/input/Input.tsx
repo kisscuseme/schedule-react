@@ -1,7 +1,7 @@
 import { InputProps } from "./input.props";
 import { css } from "@emotion/react";
 import { defaultStyle, innerBtnStyle, sizeStyles } from "./input.styles";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * 기본 인풋 컴포넌트
@@ -17,10 +17,11 @@ export const Input = ({
   onChange,
   ref,
   clearBtnRef,
+  initValue,
   onClearButtonClick,
   ...props
 }: InputProps) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initValue||"");
 
   const customStyle = `
     color: ${color};
