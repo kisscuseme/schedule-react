@@ -9,6 +9,6 @@ export const Container = ({
   return (
     <BootstrapContainer fluid css={css(defaultStyle)}>
       {children}
-    </BootstrapContainer>
+  </BootstrapContainer>
   )
 }
