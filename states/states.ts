@@ -23,6 +23,11 @@ export const reloadDataState = atom<boolean>({
   default: false
 });
 
+export const rerenderDataState = atom<boolean>({
+  key: "rerenderDataState",
+  default: false
+});
+
 export const showModalState = atom<AlertType>({
   key: "showModalState",
   default: {

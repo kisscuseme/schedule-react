@@ -4,7 +4,7 @@ import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { Button } from "../atoms/button/Button";
 import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { reloadDataState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
+import { reloadDataState, rerenderDataState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
 import { getReformDate, s } from "@/services/util/util";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
@@ -13,10 +13,12 @@ import { t } from "i18next";
 
 interface ScheduleEditFromProps {
   beforeSchedule: ScheduleType
+  scheduleList: ScheduleType[]
 }
 
 export const ScheduleEditForm = ({
-  beforeSchedule
+  beforeSchedule,
+  scheduleList
 }: ScheduleEditFromProps) => {
   const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
     fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
@@ -29,6 +31,7 @@ export const ScheduleEditForm = ({
   const closeAccordion = useAccordionButton(beforeSchedule?.id as string);
   const closeAccordionButtonRef = useRef<HTMLButtonElement>(null);
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
+  const [rerenderData, setRerenderDataState] = useRecoilState(rerenderDataState);
 
   useEffect(() => {
     if(beforeSchedule?.id as string === scheduleAccordionActive) {
@@ -48,7 +51,24 @@ export const ScheduleEditForm = ({
 
   const changeScheduleMutation = useMutation(updateScheduleData, {
     onSuccess() {
-      setReloadData(true);
+      const index = scheduleList.findIndex((schedule) => schedule?.id === beforeSchedule?.id);
+      if(index > -1) {
+        scheduleList[index] = {
+          id: beforeSchedule?.id as string,
+          date: getReformDate(scheduleInput.fromDate,"."),
+          content: scheduleInput.schedule,
+          toDate: getReformDate(scheduleInput.toDate,".")
+        };
+      }
+      scheduleList.sort((a, b) => {
+        if(a === null || b === null) return 0
+        else {
+          const numA = Number(a.date.replaceAll(".","").substring(0,8));
+          const numB = Number(b.date.replaceAll(".","").substring(0,8));
+          return numB - numA;
+        }
+      });
+      setRerenderDataState(!rerenderData);
     }
   });
 
@@ -88,7 +108,17 @@ export const ScheduleEditForm = ({
 
   const deleteScheduleMutation = useMutation(deleteScheduleData, {
     onSuccess() {
-      setReloadData(true);
+      scheduleList.sort((a, b) => {
+        if(a === null || b === null) return 0
+        else {
+          let numA = Number(a.date.replaceAll(".","").substring(0,8));
+          let numB = Number(b.date.replaceAll(".","").substring(0,8));
+          if(b.id === beforeSchedule?.id) return -1;
+          else return numB - numA;
+        }
+      });
+      scheduleList.pop();
+      setRerenderDataState(!rerenderData);
     },
   });
 

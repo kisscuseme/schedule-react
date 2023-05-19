@@ -85,6 +85,8 @@ const insertScheduleData = async (insertInfo: {uid: string, newSchedule: object}
 
   // Commit the batch
   await batch.commit();
+
+  return docRef.id;
 }
 
 const deleteScheduleData = async (deleteInfo: {uid: string, scheduleId: string}) => {

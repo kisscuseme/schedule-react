@@ -1,7 +1,7 @@
 import { queryScheduleData } from "@/services/firebase/db";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { getYearList, s } from "@/services/util/util";
-import { reloadDataState, scheduleAccordionActiveState, selectedYearState, userInfoState } from "@/states/states";
+import { reloadDataState, rerenderDataState, scheduleAccordionActiveState, selectedYearState, userInfoState } from "@/states/states";
 import { css } from "@emotion/react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
@@ -14,11 +14,14 @@ import { Text } from "../atoms/text/Text";
 import { useQuery } from "@tanstack/react-query";
 import { ScheduleEditForm } from "./ScheduleEditForm";
 import { t } from "i18next";
+import { ScheduleAddForm } from "./ScheduleAddForm";
+import { DivisionLine } from "../molecules/divideLine/DivisionLine";
 
 export const ScheduleList = () => {
   const selectedYear = useRecoilValue<string>(selectedYearState);
   const userInfo = useRecoilValue<UserType>(userInfoState);
-  const [scheduledata, setScheduleData] = useState<ScheduleType[]>([]);
+  const [scheduleData, setScheduleData] = useState<ScheduleType[]>([]);
+  const rerenderData = useRecoilValue(rerenderDataState);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [allowLoading, setAllowLoading] = useState<boolean>(true);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
@@ -26,6 +29,10 @@ export const ScheduleList = () => {
   const [noMoreData, setNoMoreData] = useState<boolean>(false);
   const [reloadData, setReloadData] = useRecoilState(reloadDataState);
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
+
+  useEffect(() => {
+    console.log(scheduleData);
+  }, [rerenderData]);
 
   const getYearRange = () => {
     const yearList = getYearList();
@@ -65,7 +72,7 @@ export const ScheduleList = () => {
     refetchOnWindowFocus: false,
     retry: 0,
     onSuccess: data => {
-      lastVisible && !noMoreData ? setScheduleData([...scheduledata, ...data.dataList]) : setScheduleData(data.dataList);
+      lastVisible && !noMoreData ? setScheduleData([...scheduleData, ...data.dataList]) : setScheduleData(data.dataList);
       data.lastVisible ? setNextLastVisible(data.lastVisible) : setNoMoreData(true);
       setAllowLoading(true);
       setReloadData(false);
@@ -116,11 +123,13 @@ export const ScheduleList = () => {
 
   return (
     <>
+      <ScheduleAddForm scheduleList={scheduleData}/>
+      <DivisionLine/>
       <AccordionParent defaultActiveKey={scheduleAccordionActive} onSelect={(e) => {
         setScheduleAccordionActive(e as string);
       }}>
-        {scheduledata.length > 0 ? (
-          scheduledata.map((item) => (
+        {scheduleData.length > 0 ? (
+          scheduleData.map((item) => (
             <Row key={item?.id}>
               <AccordionChild
                 dataId={item?.id as string}
@@ -144,7 +153,7 @@ export const ScheduleList = () => {
                   </>
                 }
                 bodyContent={
-                  <ScheduleEditForm beforeSchedule={item}/>
+                  <ScheduleEditForm beforeSchedule={item} scheduleList={scheduleData}/>
                 }
               />
             </Row>
@@ -163,7 +172,7 @@ export const ScheduleList = () => {
       </AccordionParent>
       <Row>
         <Col>
-          {scheduledata.length > 0 &&
+          {scheduleData.length > 0 &&
             !noMoreData &&
             (allowLoading && !isLoading ? (
               <Button

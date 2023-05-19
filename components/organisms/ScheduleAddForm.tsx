@@ -2,18 +2,25 @@ import { Col, Row } from "react-bootstrap";
 import { Button } from "../atoms/button/Button";
 import { useState } from "react";
 import { getReformDate, getToday, s } from "@/services/util/util";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { reloadDataState, showModalState, userInfoState } from "@/states/states";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { rerenderDataState, showModalState, userInfoState } from "@/states/states";
 import { insertScheduleData } from "@/services/firebase/db";
-import { UserType } from "@/services/firebase/firebase.type";
+import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
 import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
 
-export const ScheduleAddForm = () => {
+interface ScheduleAddFromProps {
+  scheduleList: ScheduleType[]
+}
+
+
+export const ScheduleAddForm = ({
+  scheduleList
+}: ScheduleAddFromProps) => {
   const setShowModal = useSetRecoilState(showModalState);
-  const setReloadData = useSetRecoilState(reloadDataState);
+  const [rerenderData, setRerenderDataState] = useRecoilState(rerenderDataState);
   const userInfo = useRecoilValue<UserType>(userInfoState);
   const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
     fromDate: getToday(),
@@ -22,13 +29,27 @@ export const ScheduleAddForm = () => {
   });
 
   const insertScheduleMutation = useMutation(insertScheduleData, {
-    onSuccess() {
+    onSuccess(data) {
+      scheduleList.push({
+        id: data,
+        date: getReformDate(scheduleInput.fromDate,"."),
+        content: scheduleInput.schedule,
+        toDate: getReformDate(scheduleInput.toDate,".")
+      });
       setScheduleInput({
         fromDate: getToday(),
         toDate: getToday(),
         schedule: ""
       });
-      setReloadData(true);
+      scheduleList.sort((a, b) => {
+        if(a === null || b === null) return 0
+        else {
+          const numA = Number(a.date.replaceAll(".","").substring(0,8));
+          const numB = Number(b.date.replaceAll(".","").substring(0,8));
+          return numB - numA;
+        }
+      });
+      setRerenderDataState(!rerenderData);
     }
   });
 
