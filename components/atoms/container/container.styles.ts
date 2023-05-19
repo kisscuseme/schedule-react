@@ -1,8 +1,8 @@
 export const defaultStyle = `
-  background-color: #f2f2f2;
-  max-width: 600px;
+  background-color: transparent;
+  max-width: 550px;
   min-height: 100vh;
   height: 100%;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
 `;

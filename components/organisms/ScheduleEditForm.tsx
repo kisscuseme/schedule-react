@@ -27,7 +27,7 @@ export const ScheduleEditForm = ({
   });
   const userInfo = useRecoilValue<UserType>(userInfoState);
   const setShowModal = useSetRecoilState(showModalState);
-  const [reloadData, setReloadData] = useRecoilState(reloadDataState);
+  const reloadData = useRecoilValue(reloadDataState);
   const closeAccordion = useAccordionButton(beforeSchedule?.id as string);
   const closeAccordionButtonRef = useRef<HTMLButtonElement>(null);
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
@@ -84,6 +84,12 @@ export const ScheduleEditForm = ({
         show: true,
         title: s(t("Check")),
         content: s(t("Please enter a date."))
+      });
+    } else if(scheduleInput.schedule === beforeSchedule?.content && getReformDate(scheduleInput.fromDate,"-") === getReformDate(beforeSchedule?.date||"", "-") && getReformDate(scheduleInput.toDate,"-") === getReformDate(beforeSchedule?.toDate||"", "-")){
+      setShowModal({
+        show: true,
+        title: s(t("Check")),
+        content: s(t("Everything is the same."))
       });
     } else {
       setShowModal({
