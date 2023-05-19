@@ -14,6 +14,8 @@ import { firebaseAuth } from "@/services/firebase/firebase";
 import { t } from "i18next";
 import { LanguageSelector } from "./LanguageSelector";
 import { DivisionLine } from "../molecules/divideLine/DivisionLine";
+import { TopBar } from "../molecules/topBar/topBar";
+import { topColStyle } from "../molecules/topBar/topBar.styles";
 
 export const ScheduleTopBar = () => {
   const [userInfo, setUserInfo] = useRecoilState<UserType>(userInfoState);
@@ -25,14 +27,6 @@ export const ScheduleTopBar = () => {
   useEffect(() => {
     setSelectedYear(getToday().substring(0,4));
   }, [setSelectedYear]);
-
-  const topRowStyle = css`
-    height: 70px !important;
-  `;
-
-  const topColStyle = css`
-    margin: auto;
-  `;
 
   const navButtonStyle = css`
     border: 0;
@@ -108,8 +102,8 @@ export const ScheduleTopBar = () => {
   }
 
   return (
-    <Row css={topRowStyle}>
-      <Col css={topColStyle}>
+    <TopBar>
+      <Col css={css(topColStyle)}>
         <Navbar expand={false}>
           <Navbar.Toggle
             aria-controls={`nav-1`}
@@ -161,7 +155,7 @@ export const ScheduleTopBar = () => {
           </Navbar.Offcanvas>
         </Navbar>
       </Col>
-      <Col css={topColStyle}>
+      <Col css={css(topColStyle)}>
         <Dropdown
           initText={selectedYear}
           items={data}
@@ -170,6 +164,6 @@ export const ScheduleTopBar = () => {
           color="#3e3e3e"
         />
       </Col>
-    </Row>
+    </TopBar>
   );
 }
