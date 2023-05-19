@@ -33,7 +33,7 @@ export const Input = ({
   
   const borderStyle = `
     border-bottom: 1px solid ${borderColor};
-    ${clearButton? "padding-right:15px" : ""}
+    ${clearButton? "padding-right:20px" : ""}
   `;
 
   return (
