@@ -8,7 +8,7 @@ import { DropdownDataProps } from "../atoms/dropdown/dropdown.props";
 import localesJSON from "../../locales/locales.json";
 
 export const LanguageSelector = () => {
-  const setSelectedLanguage = useSetRecoilState<string>(selectedLanguageState);
+  const setSelectedLanguage = useSetRecoilState(selectedLanguageState);
   const setShowModal = useSetRecoilState(showModalState);
   const router = useRouter();
 
