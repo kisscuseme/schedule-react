@@ -9,9 +9,13 @@ export default function SignUpPage() {
   const [isChanged, setIsChanged] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(selectedLanguage);
+    setIsChanged(!isChanged);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if(selectedLanguage !== null) {
-      i18next.changeLanguage(selectedLanguage||"kr").then((t) => {
+      i18next.changeLanguage(selectedLanguage).then((t) => {
         setIsChanged(!isChanged);
       });
     }
@@ -19,7 +23,10 @@ export default function SignUpPage() {
   }, [selectedLanguage]);
 
   useEffect(() => {
-    localStorage.getItem(i18next.language);
+    if(selectedLanguage !== null) {
+      localStorage.setItem("language", selectedLanguage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChanged]);
 
   return <SignUp/>

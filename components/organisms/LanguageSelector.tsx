@@ -9,7 +9,6 @@ import localesJSON from "../../locales/locales.json";
 export const LanguageSelector = () => {
   const setSelectedLanguage = useSetRecoilState(selectedLanguageState);
   const setShowModal = useSetRecoilState(showModalState);
-
   const data: DropdownDataProps[] = [];
   
   const locales = JSON.parse(JSON.stringify(localesJSON));
@@ -31,7 +30,6 @@ export const LanguageSelector = () => {
 
   const selectLanguage = async (langCode: string) => {
     try {
-      localStorage.setItem("language", langCode);
       setSelectedLanguage(langCode);
     } catch(error: any) {
       setShowModal({
@@ -43,13 +41,13 @@ export const LanguageSelector = () => {
   }
 
   return (
-    <Dropdown
-    title={`${s(t('Language'))}:`}
-    initText={getLanguageName(i18next.language)}
-    items={data}
-    onClickItemHandler={selectLanguage}
-    align="right"
-    color="#3e3e3e"
-  />
+    i18next.language ? <Dropdown
+      title={`${s(t('Language'))}:`}
+      initText={getLanguageName(i18next.language)}
+      items={data}
+      onClickItemHandler={selectLanguage}
+      align="right"
+      color="#3e3e3e"
+    /> : <></>
   )
 }

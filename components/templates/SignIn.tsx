@@ -14,6 +14,7 @@ import { topColStyle } from "../molecules/topBar/topBar.styles";
 
 export default function SignIn() {
   const showModal = useRecoilValue(showModalState);
+
   return (
     <>
       <Container>

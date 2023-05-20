@@ -6,9 +6,6 @@ import SignIn from "@/components/templates/SignIn";
 import { LoadingScreen } from "@/components/molecules/loadingScreen/LoadingScreen";
 import { useEffect, useState } from "react";
 import i18next from "i18next";
-import translationKR from '../locales/kr/translation.json';
-import translationEN from '../locales/en/translation.json';
-import localesJSON from '../locales/locales.json';
 
 export default function Home() {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
@@ -16,35 +13,9 @@ export default function Home() {
   const selectedLanguage = useRecoilValue(selectedLanguageState);
   const [isChanged, setIsChanged] = useState<boolean>(false);
 
-  const getLocaleJSON = (locale: string) => {
-    if(locale === "kr") return translationKR
-    else return translationEN
-  }
-
-  useEffect(() => {
-    const locales = localesJSON;
-    let resources: any = {}
-    for(const key in locales) {
-      resources[key] = {
-        translation: getLocaleJSON(key)
-      }
-    }
-    
-    i18next
-    .init({
-      resources,
-      lng: localStorage.getItem("language")||"kr", //default language
-      keySeparator: false,
-      interpolation: {
-        escapeValue: false,
-      },
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if(selectedLanguage !== null) {
-      i18next.changeLanguage(selectedLanguage||"kr").then((t) => {
+      i18next.changeLanguage(selectedLanguage).then((t) => {
         setIsChanged(!isChanged);
       });
     }
@@ -52,7 +23,10 @@ export default function Home() {
   }, [selectedLanguage]);
 
   useEffect(() => {
-    localStorage.getItem(i18next.language);
+    if(selectedLanguage !== null) {
+      localStorage.setItem("language", selectedLanguage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChanged]);
 
   firebaseAuth.onAuthStateChanged((user) => {
