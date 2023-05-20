@@ -4,7 +4,7 @@ interface AlertOwnProps {
   /**
    * title
    */
-  title?: string;
+  title?: React.ReactNode;
   /**
    * content
    */

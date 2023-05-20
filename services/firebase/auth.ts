@@ -1,4 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { t } from "i18next";
+import { s } from "../util/util";
 import { firebaseAuth } from "./firebase";
 
 const signIn = async (email: string, password: string) => {
@@ -13,9 +15,9 @@ const signIn = async (email: string, password: string) => {
     switch (error.code) {
       case "auth/user-not-found":
       case "auth/wrong-password":
-        return "이메일 주소 또는 비밀번호가 잘못되었습니다.";
+        return "Your email address or password is incorrect.";
       default:
-        return "로그인 중 에러가 발생하였습니다.\n" + error.message;
+        return "An error occurred while logging in." + "\n" + error.message;
     }
   }
 };
@@ -31,13 +33,13 @@ const signUp = async (email: string, password: string) => {
   } catch (error: any) {
     switch (error.code) {
       case "auth/weak-password":
-        return "비밀번호는 6자리 이상이어야 합니다";
+        return "Password must be 6 digits or longer.";
       case "auth/invalid-email":
-        return "잘못된 이메일 형식입니다";
+        return "Invalid email format.";
       case "auth/email-already-in-use":
-        return "이미 가입되어 있는 계정입니다";
+        return "This account has already been created.";
       default:
-        return "가입 중 에러가 발생하였습니다.\n" + error.message;
+        return "An error occurred while creating an account." + "\n" + error.message;
     }
   }
 };
@@ -47,7 +49,7 @@ const logOut = async () => {
     await signOut(firebaseAuth);
     return true;
   } catch(error: any) {
-    console.log("로그아웃 중 오류가 발생했습니다.\n" + error.message);
+    console.log(s(t("An error occurred while logging out.")) + "\n" + error.message);
     return false;
   }
 }

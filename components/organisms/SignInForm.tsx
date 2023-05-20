@@ -99,11 +99,11 @@ export const SignInForm = () => {
 
   const signInHandleSubmit = () => {
     if(email === "") {
-      setErrorMsg(s(t("Please enter your e-mail.")));
+      setErrorMsg("Please enter your e-mail.");
     } else if(!checkEmail(email)) {
-      setErrorMsg(s(t("Please check your email format.")));
+      setErrorMsg("Please check your email format.");
     } else if(password === "") {
-      setErrorMsg(s(t("Please enter your password.")));
+      setErrorMsg("Please enter your password.");
     } else {
       setErrorMsg("");
       signInMutation.mutate({ email: email, password });
@@ -144,9 +144,9 @@ export const SignInForm = () => {
 
   const resetPasswordClickHandler = () => {
     if(email === "") {
-      setErrorMsg(s(t("Please enter your e-mail.")));
+      setErrorMsg("Please enter your e-mail.");
     } else if (!checkEmail(email)) {
-      setErrorMsg(s(t("Please check your email format.")));
+      setErrorMsg("Please check your email format.");
     } else {
       try {
         setShowModal({
@@ -244,7 +244,7 @@ export const SignInForm = () => {
       </Row>
       <Row>
         <Col>
-          <Text align="center" color="hotpink">{errorMsg}</Text>
+          <Text align="center" color="hotpink">{s(t(errorMsg))}</Text>
         </Col>
       </Row>
     </div>

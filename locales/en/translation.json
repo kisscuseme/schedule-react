@@ -57,5 +57,12 @@
   "Sat": "Sat",
   "Sun": "Sun",
   "Enter schedule": "Enter schedule",
-  "Everything is the same.": "Everything is the same."
+  "Everything is the same.": "Everything is the same.",
+  "Your email address or password is incorrect.": "Your email address or password is incorrect.",
+  "An error occurred while logging in.": "An error occurred while logging in.",
+  "Password must be 6 digits or longer.": "Password must be 6 digits or longer.",
+  "Invalid email format.": "Invalid email format.",
+  "This account has already been created.": "This account has already been created.",
+  "An error occurred while creating an account.": "An error occurred while creating an account.",
+  "An error occurred while logging out.": "An error occurred while logging out."
 }
