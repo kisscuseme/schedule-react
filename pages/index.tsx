@@ -48,10 +48,11 @@ export default function Home() {
         setIsChanged(!isChanged);
       });
     }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLanguage]);
 
   useEffect(() => {
-    // console.log("rerender");
     localStorage.getItem(i18next.language);
   }, [isChanged]);
 

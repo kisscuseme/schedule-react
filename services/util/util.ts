@@ -35,11 +35,12 @@ const getYearList = () => {
   const yearList: DropdownDataProps[] = [];
   const now = new Date();
   const year: number = now.getFullYear();
-  for(let i=-3 ; i < 4; i++ ) {
+  const limitRange = 3;
+  for(let i=-1*limitRange ; i < limitRange+1; i++ ) {
     yearList.push({
       key: String(year + i),
       href: "#",
-      label: String(year + i) + (i === -3 ? " 이전" : (i === 3 ? " 이후" : ""))
+      label: String(year + i) + (i === -1*limitRange ? "↓" : (i === limitRange ? "↑" : ""))
     });
   }
   yearList.reverse();

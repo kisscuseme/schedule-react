@@ -164,7 +164,7 @@ export const ScheduleList = () => {
         ) : (
           <Row>
             <Col>
-              <Text align="center">{s(t("No content was viewed."))}</Text>
+              <Text align="center">{s(t("No content viewed."))}</Text>
             </Col>
           </Row>
         )}
