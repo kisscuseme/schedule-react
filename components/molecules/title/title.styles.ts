@@ -1,5 +1,5 @@
 const topRowStyle = `
-  height: 150px !important;
+  height: 100px !important;
 `;
 
 const topColStyle = `
