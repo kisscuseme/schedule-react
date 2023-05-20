@@ -3,6 +3,6 @@ export const defaultStyle = `
   max-width: 550px;
   min-height: 100vh;
   height: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
