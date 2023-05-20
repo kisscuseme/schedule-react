@@ -1,6 +1,7 @@
 import { LoginStateType, UserType } from '@/services/firebase/firebase.type';
 import { getToday } from '@/services/util/util';
 import { AlertType, ScheduleInputType } from '@/types/global.types';
+import { AccordionEventKey } from 'react-bootstrap/esm/AccordionContext';
 import { atom } from 'recoil';
 
 export const userInfoState = atom<UserType>({
@@ -42,7 +43,7 @@ export const showModalState = atom<AlertType>({
   }
 });
 
-export const scheduleAccordionActiveState = atom<string | null>({
+export const scheduleAccordionActiveState = atom<AccordionEventKey | null>({
   key: "scheduleAccordionActiveState",
   default: ""
 });

@@ -45,7 +45,7 @@ const queryScheduleData = async (whereConfig: WhereConfigType[], uid: string, la
     });
   });
 
-  const nextLastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+  const nextLastVisible = scheduleList.length < limitNumber ? null : documentSnapshots.docs[documentSnapshots.docs.length - 1];
   return {
     lastVisible: nextLastVisible,
     dataList: scheduleList

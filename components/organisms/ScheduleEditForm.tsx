@@ -5,7 +5,7 @@ import { Button } from "../atoms/button/Button";
 import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { reloadDataState, rerenderDataState, resetClearButtonState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
-import { getReformDate, s } from "@/services/util/util";
+import { getReformDate, s, sortSchedulList } from "@/services/util/util";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
 import { useMutation } from "@tanstack/react-query";
@@ -21,21 +21,21 @@ export const ScheduleEditForm = ({
   scheduleList
 }: ScheduleEditFromProps) => {
   const [scheduleInput, setScheduleInput] = useState<ScheduleInputType>({
-    fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
-    toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
-    schedule: beforeSchedule?.content as string
+    fromDate: (beforeSchedule?.date||"").substring(0,10).replaceAll(".","-"),
+    toDate: (beforeSchedule?.toDate||"").substring(0,10).replaceAll(".","-"),
+    schedule: beforeSchedule?.content||""
   });
   const userInfo = useRecoilValue(userInfoState);
   const setShowModal = useSetRecoilState(showModalState);
   const reloadData = useRecoilValue(reloadDataState);
-  const closeAccordion = useAccordionButton(beforeSchedule?.id as string);
+  const closeAccordion = useAccordionButton(beforeSchedule?.id||"");
   const closeAccordionButtonRef = useRef<HTMLButtonElement>(null);
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
   const [rerenderData, setRerenderData] = useRecoilState(rerenderDataState);
   const [resetClearButton, setResetClearButton] = useRecoilState(resetClearButtonState);
 
   useEffect(() => {
-    if(beforeSchedule?.id as string === scheduleAccordionActive) {
+    if(beforeSchedule?.id === scheduleAccordionActive) {
       setScheduleAccordionActive(null);
       closeAccordionButtonRef.current?.click();
     }
@@ -44,10 +44,10 @@ export const ScheduleEditForm = ({
   
   const resetChange = () => {
     setScheduleInput({
-      fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
-      toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
-      schedule: beforeSchedule?.content as string,
-      id: beforeSchedule?.id
+      fromDate: (beforeSchedule?.date||"").substring(0,10).replaceAll(".","-"),
+      toDate: (beforeSchedule?.toDate||"").substring(0,10).replaceAll(".","-"),
+      schedule: beforeSchedule?.content||"",
+      id: beforeSchedule?.id||""
     });
     setResetClearButton(!resetClearButton);
   }
@@ -57,20 +57,13 @@ export const ScheduleEditForm = ({
       const index = scheduleList.findIndex((schedule) => schedule?.id === beforeSchedule?.id);
       if(index > -1) {
         scheduleList[index] = {
-          id: beforeSchedule?.id as string,
+          id: beforeSchedule?.id||"",
           date: getReformDate(scheduleInput.fromDate,"."),
           content: scheduleInput.schedule,
           toDate: getReformDate(scheduleInput.toDate,".")
         };
       }
-      scheduleList.sort((a, b) => {
-        if(a === null || b === null) return 0
-        else {
-          const numA = Number(a.date.replaceAll(".","").substring(0,8));
-          const numB = Number(b.date.replaceAll(".","").substring(0,8));
-          return numB - numA;
-        }
-      });
+      scheduleList.sort(sortSchedulList);
       setRerenderData(!rerenderData);
     }
   });
@@ -101,8 +94,8 @@ export const ScheduleEditForm = ({
         content: s(t("Are you sure you want to edit?")),
         confirm: () => {
           changeScheduleMutation.mutate({
-            uid: userInfo?.uid as string,
-            scheduleId: beforeSchedule?.id as string,
+            uid: userInfo?.uid||"",
+            scheduleId: beforeSchedule?.id||"",
             newSchedule: {
               content: scheduleInput.schedule,
               date: getReformDate(scheduleInput.fromDate, "."),
@@ -138,8 +131,8 @@ export const ScheduleEditForm = ({
       content: s(t("Are you sure you want to delete?")),
       confirm: () => {
         deleteScheduleMutation.mutate({
-          uid: userInfo?.uid as string,
-          scheduleId: beforeSchedule?.id as string
+          uid: userInfo?.uid||"",
+          scheduleId: beforeSchedule?.id||""
         });
         eventHandler(event);
       }

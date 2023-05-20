@@ -1,6 +1,6 @@
 import { queryScheduleData } from "@/services/firebase/db";
 import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
-import { getDay, getYearList, s } from "@/services/util/util";
+import { getDay, getYearList, s, sortSchedulList } from "@/services/util/util";
 import { reloadDataState, rerenderDataState, scheduleAccordionActiveState, selectedYearState, userInfoState } from "@/states/states";
 import { css } from "@emotion/react";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
@@ -21,7 +21,6 @@ export const ScheduleList = () => {
   const selectedYear = useRecoilValue<string>(selectedYearState);
   const userInfo = useRecoilValue<UserType>(userInfoState);
   const [scheduleData, setScheduleData] = useState<ScheduleType[]>([]);
-  const rerenderData = useRecoilValue(rerenderDataState);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [allowLoading, setAllowLoading] = useState<boolean>(true);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
@@ -29,6 +28,7 @@ export const ScheduleList = () => {
   const [noMoreData, setNoMoreData] = useState<boolean>(false);
   const [reloadData, setReloadData] = useRecoilState(reloadDataState);
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
+  const [rerenderData, setRerenderData] = useRecoilState(rerenderDataState);
 
   useEffect(() => {
   }, [rerenderData]);
@@ -64,7 +64,7 @@ export const ScheduleList = () => {
         operator: "<=",
         value: yearRange.toYear
       }
-    ], userInfo?.uid as string, lastVisible);
+    ], userInfo?.uid||"", lastVisible);
   }
 
   const { isLoading, refetch } = useQuery(["loadSchedule"], getScheduleData, {
@@ -73,6 +73,7 @@ export const ScheduleList = () => {
     onSuccess: data => {
       lastVisible && !noMoreData ? setScheduleData([...scheduleData, ...data.dataList]) : setScheduleData(data.dataList);
       data.lastVisible ? setNextLastVisible(data.lastVisible) : setNoMoreData(true);
+
       setAllowLoading(true);
       setReloadData(false);
     },
@@ -81,6 +82,12 @@ export const ScheduleList = () => {
       setAllowLoading(true);
     }
   });
+
+  useEffect(() => {
+    scheduleData.sort(sortSchedulList);
+    setRerenderData(!rerenderData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleData]);
 
   useEffect(() =>{
     let lastScrollY = 0;
@@ -118,6 +125,7 @@ export const ScheduleList = () => {
   const spinnerStyle = css`
     margin: auto;
     display: flex;
+    color: #bfbfbf
   `;
 
   return (
@@ -125,13 +133,13 @@ export const ScheduleList = () => {
       <ScheduleAddForm scheduleList={scheduleData}/>
       <DivisionLine/>
       <AccordionParent defaultActiveKey={scheduleAccordionActive} onSelect={(e) => {
-        setScheduleAccordionActive(e as string);
+        setScheduleAccordionActive(e);
       }}>
         {scheduleData.length > 0 ? (
           scheduleData.map((item) => (
             <Row key={item?.id}>
               <AccordionChild
-                dataId={item?.id as string}
+                dataId={item?.id||""}
                 headerContent={
                   <>
                     <Col xs={5}>

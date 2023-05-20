@@ -1,7 +1,6 @@
 import { s } from "@/services/util/util";
 import { selectedLanguageState, showModalState } from "@/states/states";
 import i18next, { t } from "i18next";
-import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 import { Dropdown } from "../atoms/dropdown/Dropdown";
 import { DropdownDataProps } from "../atoms/dropdown/dropdown.props";
@@ -10,7 +9,6 @@ import localesJSON from "../../locales/locales.json";
 export const LanguageSelector = () => {
   const setSelectedLanguage = useSetRecoilState(selectedLanguageState);
   const setShowModal = useSetRecoilState(showModalState);
-  const router = useRouter();
 
   const data: DropdownDataProps[] = [];
   
@@ -35,8 +33,6 @@ export const LanguageSelector = () => {
     try {
       localStorage.setItem("language", langCode);
       setSelectedLanguage(langCode);
-      // router.reload();
-      
     } catch(error: any) {
       setShowModal({
         show: true,

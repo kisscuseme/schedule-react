@@ -22,7 +22,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const locales = JSON.parse(JSON.stringify(localesJSON));
+    const locales = localesJSON;
     let resources: any = {}
     for(const key in locales) {
       resources[key] = {
@@ -48,7 +48,6 @@ export default function Home() {
         setIsChanged(!isChanged);
       });
     }
-    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLanguage]);
 
@@ -60,8 +59,8 @@ export default function Home() {
     if (user && user.emailVerified) {
       if (!userInfo) setUserInfo({
           uid: user.uid,
-          name: user.displayName as string,
-          email: user.email as string
+          name: user.displayName||"",
+          email: user.email||""
         });
       if(isLogedIn === null) setIsLogedIn(true);
     } else {

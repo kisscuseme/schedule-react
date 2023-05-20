@@ -4,8 +4,13 @@ import { Title } from "@/components/molecules/title/Title";
 import { SignUpForm } from "@/components/organisms/SignUpForm";
 import { s } from "@/services/util/util";
 import { showModalState } from "@/states/states";
+import { css } from "@emotion/react";
 import { t } from "i18next";
+import { Col } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
+import { TopBar } from "../molecules/topBar/topBar";
+import { topColStyle } from "../molecules/topBar/topBar.styles";
+import { LanguageSelector } from "../organisms/LanguageSelector";
 
 export default function SignUp() {
   const showModal = useRecoilValue(showModalState);
@@ -13,6 +18,11 @@ export default function SignUp() {
   return (
     <>
       <Container>
+        <TopBar>
+          <Col css={css(topColStyle)}>
+            <LanguageSelector/>
+          </Col>
+        </TopBar>
         <Title>
         {s(t("Create an account"))}
         </Title>

@@ -19,12 +19,12 @@ export const Text = <E extends React.ElementType>({
   const centerStyle = align === "center" ? "width:100%;text-align:center;" : ("float: " + align);
   const customStyle = [colorStyle, centerStyle];
 
-  if(['h1','h2','h3','h4','h5','h6'].indexOf(as as string) < 0) {
+  if(['h1','h2','h3','h4','h5','h6'].indexOf(Component as string) < 0) {
     const sizeStyle = `${sizeStyles[size]}`;
     customStyle.push(sizeStyle);
   }
   
-  if(['a'].indexOf(as as string) > -1) {
+  if(['a'].indexOf(Component as string) > -1) {
     const hoverStyle = `
       cursor: pointer;
       &:hover {

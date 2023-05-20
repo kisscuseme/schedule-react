@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { Button } from "../atoms/button/Button";
 import { useState } from "react";
-import { getReformDate, getToday, s } from "@/services/util/util";
+import { getReformDate, getToday, s, sortSchedulList } from "@/services/util/util";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { rerenderDataState, showModalState, userInfoState } from "@/states/states";
 import { insertScheduleData } from "@/services/firebase/db";
@@ -44,14 +44,7 @@ export const ScheduleAddForm = ({
         toDate: getToday(),
         schedule: ""
       });
-      scheduleList.sort((a, b) => {
-        if(a === null || b === null) return 0
-        else {
-          const numA: number = Number(a.date.replaceAll(".","").substring(0,8));
-          const numB: number = Number(b.date.replaceAll(".","").substring(0,8));
-          return numB - numA;
-        }
-      });
+      scheduleList.sort(sortSchedulList);
       setRerenderDataState(!rerenderData);
     }
   });
@@ -71,7 +64,7 @@ export const ScheduleAddForm = ({
       });
     } else {
       insertScheduleMutation.mutate({
-        uid: userInfo?.uid as string,
+        uid: userInfo?.uid||"",
         newSchedule: {
           content: scheduleInput.schedule,
           date: getReformDate(scheduleInput.fromDate, "."),

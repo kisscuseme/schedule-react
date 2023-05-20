@@ -1,5 +1,6 @@
 import { DropdownDataProps } from "@/components/atoms/dropdown/dropdown.props";
 import { t } from "i18next";
+import { ScheduleType } from "../firebase/firebase.type";
 
 const getDay = (date: string) => {
   var yyyyMMdd = getReformDate(date, "").substring(0, 8);
@@ -61,4 +62,22 @@ const s = (translationKey: string | undefined | null) => {
   return translationKey || "";
 }
 
-export { checkEmail, checkPassword, getDay, getReformDate, getToday, getYearList, s }
+const sortSchedulList = (before: ScheduleType, after: ScheduleType) => {
+  if(before === null || after === null) return 0
+  else {
+    const numA = Number(before.date.replaceAll(".","").substring(0,8));
+    const numB = Number(after.date.replaceAll(".","").substring(0,8));
+    return numB - numA;
+  }
+}
+
+export {
+  checkEmail,
+  checkPassword,
+  getDay,
+  getReformDate,
+  getToday,
+  getYearList,
+  s,
+  sortSchedulList,
+};
