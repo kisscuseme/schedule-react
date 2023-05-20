@@ -1,7 +1,7 @@
 import { InputProps } from "./input.props";
 import { css } from "@emotion/react";
 import { defaultStyle, innerBtnStyle, sizeStyles } from "./input.styles";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * 기본 인풋 컴포넌트
@@ -23,6 +23,12 @@ export const Input = ({
 }: InputProps) => {
   const [text, setText] = useState(initValue||"");
 
+  useEffect(() => {
+    if(initValue !== "") {
+      setText(initValue||"");
+    }
+  }, [initValue]);
+
   const customStyle = `
     color: ${color};
     &::placeholder {
@@ -33,7 +39,7 @@ export const Input = ({
   
   const borderStyle = `
     border-bottom: 1px solid ${borderColor};
-    ${clearButton? "padding-right:20px" : ""}
+    ${clearButton? "padding-right:25px" : ""}
   `;
 
   return (

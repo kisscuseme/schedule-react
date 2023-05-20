@@ -4,7 +4,7 @@ import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
 import { Button } from "../atoms/button/Button";
 import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { reloadDataState, rerenderDataState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
+import { reloadDataState, rerenderDataState, resetClearButtonState, scheduleAccordionActiveState, showModalState, userInfoState } from "@/states/states";
 import { getReformDate, s } from "@/services/util/util";
 import { ScheduleInputForm } from "./ScheduleInputForm";
 import { ScheduleInputType } from "@/types/global.types";
@@ -25,13 +25,14 @@ export const ScheduleEditForm = ({
     toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
     schedule: beforeSchedule?.content as string
   });
-  const userInfo = useRecoilValue<UserType>(userInfoState);
+  const userInfo = useRecoilValue(userInfoState);
   const setShowModal = useSetRecoilState(showModalState);
   const reloadData = useRecoilValue(reloadDataState);
   const closeAccordion = useAccordionButton(beforeSchedule?.id as string);
   const closeAccordionButtonRef = useRef<HTMLButtonElement>(null);
   const [scheduleAccordionActive, setScheduleAccordionActive] = useRecoilState(scheduleAccordionActiveState);
-  const [rerenderData, setRerenderDataState] = useRecoilState(rerenderDataState);
+  const [rerenderData, setRerenderData] = useRecoilState(rerenderDataState);
+  const [resetClearButton, setResetClearButton] = useRecoilState(resetClearButtonState);
 
   useEffect(() => {
     if(beforeSchedule?.id as string === scheduleAccordionActive) {
@@ -45,8 +46,10 @@ export const ScheduleEditForm = ({
     setScheduleInput({
       fromDate: beforeSchedule?.date.substring(0,10).replaceAll(".","-") as string,
       toDate: beforeSchedule?.toDate?.substring(0,10).replaceAll(".","-") as string,
-      schedule: beforeSchedule?.content as string
+      schedule: beforeSchedule?.content as string,
+      id: beforeSchedule?.id
     });
+    setResetClearButton(!resetClearButton);
   }
 
   const changeScheduleMutation = useMutation(updateScheduleData, {
@@ -68,7 +71,7 @@ export const ScheduleEditForm = ({
           return numB - numA;
         }
       });
-      setRerenderDataState(!rerenderData);
+      setRerenderData(!rerenderData);
     }
   });
 
@@ -124,7 +127,7 @@ export const ScheduleEditForm = ({
         }
       });
       scheduleList.pop();
-      setRerenderDataState(!rerenderData);
+      setRerenderData(!rerenderData);
     },
   });
 
@@ -148,6 +151,8 @@ export const ScheduleEditForm = ({
       <ScheduleInputForm
         scheduleInput={scheduleInput}
         setScheduleInput={setScheduleInput}
+        scheduleInputPlaceholder={beforeSchedule?.content}
+        initValue={beforeSchedule?.content}
       />
       <Row>
         <Col>

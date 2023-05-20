@@ -28,6 +28,11 @@ export const rerenderDataState = atom<boolean>({
   default: false
 });
 
+export const resetClearButtonState = atom<boolean>({
+  key: "resetClearButtonState",
+  default: false
+});
+
 export const showModalState = atom<AlertType>({
   key: "showModalState",
   default: {

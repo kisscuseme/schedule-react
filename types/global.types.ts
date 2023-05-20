@@ -9,5 +9,6 @@ export interface AlertType {
 export interface ScheduleInputType {
   toDate: string,
   fromDate: string,
-  schedule: string
+  schedule: string,
+  id?: string
 }
