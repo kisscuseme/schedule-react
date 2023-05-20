@@ -51,8 +51,8 @@ export const SignInForm = () => {
           if(userInfo === null) {
             setUserInfo({
               uid: data.user.uid,
-              name: data.user.displayName as string,
-              email: data.user.email as string
+              name: data.user.displayName||"",
+              email: data.user.email||""
             });
           }
           localStorage.setItem("email", email);

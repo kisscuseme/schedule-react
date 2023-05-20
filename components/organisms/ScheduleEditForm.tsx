@@ -1,6 +1,6 @@
 import { Col, Row, useAccordionButton } from "react-bootstrap";
 import { EventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
-import { ScheduleType, UserType } from "@/services/firebase/firebase.type";
+import { ScheduleType } from "@/services/firebase/firebase.type";
 import { Button } from "../atoms/button/Button";
 import { deleteScheduleData, updateScheduleData } from "@/services/firebase/db";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
