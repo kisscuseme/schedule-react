@@ -22,6 +22,11 @@ export default function Document() {
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
           crossOrigin="anonymous"
         />
+
+        <title>SCHEDULE</title>
+        <meta property='og:title' content='SCHEDULE'/>
+        <meta property='og:description' content='Manage your schedule'/>
+        <meta property='og:image' content='./logo.png'/>
       </Head>
       <body>
         <Main />
