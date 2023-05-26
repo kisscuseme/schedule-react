@@ -2,6 +2,7 @@ export const defaultStyle = `
     display: inline-block;
     margin: auto;
     text-decoration: none;
+    word-break: break-all;
 `;
 
 export const sizeStyles = {

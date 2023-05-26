@@ -71,7 +71,13 @@ export const ScheduleList = () => {
     refetchOnWindowFocus: false,
     retry: 0,
     onSuccess: data => {
-      lastVisible && !noMoreData ? setScheduleData([...scheduleData, ...data.dataList]) : setScheduleData(data.dataList);
+      const tempList = [...scheduleData, ...data.dataList];
+      const uniqueList = tempList.filter((value1, index) => {
+        return tempList.findIndex((value2) => {
+          return value1?.id === value2?.id;
+        }) === index;
+      });
+      lastVisible && !noMoreData ? setScheduleData(uniqueList) : setScheduleData(data.dataList);
       data.lastVisible ? setNextLastVisible(data.lastVisible) : setNoMoreData(true);
 
       setAllowLoading(true);
